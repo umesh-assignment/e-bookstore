@@ -1,0 +1,109 @@
+<main class="page" id="main-content">
+
+  <div class="container">
+    <app-breadcrumb [crumbs]="breadcrumbs" />
+  </div>
+
+  <!-- ══ Header ═══════════════════════════════════════════════════════════════ -->
+  <section class="wishlist-header">
+    <div class="container">
+      <div class="wishlist-header__row">
+        <div class="wishlist-header__left">
+          <h1 class="wishlist-header__title">
+            ♡ My Wishlist
+            @if (wishlistBooks().length > 0) {
+              <span class="wishlist-header__count">({{ wishlistBooks().length }})</span>
+            }
+          </h1>
+          <p class="wishlist-header__sub">Items you've saved for later.</p>
+        </div>
+
+        @if (wishlistBooks().length > 0) {
+          <button
+            class="btn btn--secondary wishlist-header__move-all"
+            type="button"
+            (click)="moveAllToCart()">
+            Add all in-stock to Basket
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ══ Not logged in ════════════════════════════════════════════════════════ -->
+    @if (!authSvc.isLoggedIn()) {
+      <div class="wishlist-guest">
+        <app-empty-state
+          icon="wishlist"
+          title="Sign in to view your wishlist"
+          message="Your wishlist is saved to your account. Sign in to see your saved items."
+          ctaLabel="Sign In"
+          ctaLink="/login" />
+        <p class="wishlist-guest__register">
+          Don't have an account? <a routerLink="/register">Create one free</a>
+        </p>
+      </div>
+    }
+
+    <!-- ══ Empty wishlist ═══════════════════════════════════════════════════════ -->
+    @if (authSvc.isLoggedIn() && wishlistBooks().length === 0) {
+      <div class="wishlist-empty">
+        <app-empty-state
+          icon="wishlist"
+          title="Your wishlist is empty"
+          message="Browse the catalogue and tap the heart on any book to save it here."
+          ctaLabel="Browse Books"
+          ctaLink="/catalogue" />
+      </div>
+    }
+
+    <!-- ══ Wishlist grid ════════════════════════════════════════════════════════ -->
+    @if (authSvc.isLoggedIn() && wishlistBooks().length > 0) {
+      <div class="wishlist-grid" role="list" [attr.aria-label]="wishlistBooks().length + ' saved books'">
+        @for (book of wishlistBooks(); track book.id) {
+          <div class="wishlist-item" role="listitem">
+
+            <!-- Book card -->
+            <app-book-card [book]="book" />
+
+            <!-- Item actions -->
+            <div class="wishlist-item__actions">
+              @if (book.inStock) {
+                @if (cartSvc.isInCart(book.id)) {
+                  <a class="btn btn--secondary wishlist-item__btn" routerLink="/basket">
+                    View in Basket
+                  </a>
+                } @else {
+                  <button
+                    class="btn btn--primary wishlist-item__btn"
+                    type="button"
+                    (click)="addToCart(book.id)"
+                    [attr.aria-label]="'Add ' + book.title + ' to basket'">
+                    Add to Basket
+                  </button>
+                }
+              } @else {
+                <button class="btn btn--secondary wishlist-item__btn" disabled>Out of stock</button>
+              }
+
+              <button
+                class="wishlist-item__remove"
+                type="button"
+                (click)="removeFromWishlist(book.id)"
+                [attr.aria-label]="'Remove ' + book.title + ' from wishlist'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                </svg>
+              </button>
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+  </div><!-- /container -->
+
+</main>

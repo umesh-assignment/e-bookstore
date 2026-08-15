@@ -1,0 +1,132 @@
+:host { display: block; }
+
+.orders-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-6) 0 var(--space-5);
+
+  &__title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 var(--space-1);
+  }
+
+  &__sub {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin: 0;
+  }
+}
+
+.orders-content {
+  padding: var(--space-8) 0 var(--space-12);
+}
+
+.orders-empty { padding: var(--space-8) 0; }
+
+.order-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.order-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  transition: box-shadow var(--transition-fast);
+  &:hover { box-shadow: var(--shadow-sm); }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  &__ref {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  &__date {
+    font-size: 13px;
+    color: var(--color-muted);
+  }
+
+  &__covers {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    margin-bottom: var(--space-3);
+  }
+
+  &__cover {
+    width: 52px;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &__cover-more {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    width: 36px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__titles {
+    margin-bottom: var(--space-4);
+  }
+
+  &__title-item {
+    font-size: 13px;
+    color: var(--color-text);
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &--more { color: var(--color-muted); }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__total {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  &__view-btn { flex-shrink: 0; }
+}

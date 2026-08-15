@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard }         from '@core/guards/auth.guard';
+import { nonEmptyCartGuard } from '@core/guards/non-empty-cart.guard';
 
 export const routes: Routes = [
   {
@@ -27,6 +29,7 @@ export const routes: Routes = [
   },
   {
     path: 'checkout',
+    canActivate: [nonEmptyCartGuard],
     loadComponent: () =>
       import('./features/checkout/checkout.component').then(m => m.CheckoutComponent),
     title: 'Checkout — e-Bookstore'
@@ -39,12 +42,14 @@ export const routes: Routes = [
   },
   {
     path: 'orders',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/orders/order-list/order-list.component').then(m => m.OrderListComponent),
     title: 'My Orders — e-Bookstore'
   },
   {
     path: 'orders/:id',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/orders/order-detail/order-detail.component').then(m => m.OrderDetailComponent),
     title: 'Order Details — e-Bookstore'
@@ -57,6 +62,7 @@ export const routes: Routes = [
   },
   {
     path: 'account',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./features/account/account.component').then(m => m.AccountComponent),
     title: 'My Account — e-Bookstore'

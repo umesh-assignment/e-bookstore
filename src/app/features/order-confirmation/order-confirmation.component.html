@@ -1,0 +1,121 @@
+<main class="page" id="main-content">
+  <div class="container">
+
+    @if (order(); as o) {
+
+      <!-- ══ Success banner ════════════════════════════════════════════════════ -->
+      <div class="confirm-hero" aria-label="Order confirmed">
+        <div class="confirm-hero__icon" aria-hidden="true">✅</div>
+        <h1 class="confirm-hero__title">Order Confirmed!</h1>
+        <p class="confirm-hero__sub">
+          Thank you for your order. A confirmation has been sent to your email.
+        </p>
+        <p class="confirm-hero__ref">Order <strong>#{{ o.id.slice(-8).toUpperCase() }}</strong></p>
+      </div>
+
+      <!-- ══ Order details ════════════════════════════════════════════════════ -->
+      <div class="confirm-layout">
+
+        <!-- Items -->
+        <section class="confirm-card" aria-label="Order items">
+          <h2 class="confirm-card__title">Items ordered</h2>
+          <ul class="confirm-items" role="list">
+            @for (item of o.items; track item.bookId) {
+              <li class="confirm-item" role="listitem">
+                <img class="confirm-item__cover" [src]="item.coverUrl" [alt]="item.title" loading="lazy" />
+                <div class="confirm-item__info">
+                  <a class="confirm-item__title" [routerLink]="['/catalogue', item.bookId]">{{ item.title }}</a>
+                  <p class="confirm-item__author">{{ item.author }}</p>
+                  <p class="confirm-item__qty">Qty: {{ item.quantity }}</p>
+                </div>
+                <span class="confirm-item__price">£{{ (item.price * item.quantity).toFixed(2) }}</span>
+              </li>
+            }
+          </ul>
+
+          <!-- Totals -->
+          <dl class="confirm-totals">
+            <div class="confirm-totals__row">
+              <dt>Subtotal</dt>
+              <dd>£{{ o.subtotal.toFixed(2) }}</dd>
+            </div>
+            <div class="confirm-totals__row">
+              <dt>Delivery</dt>
+              <dd>{{ o.deliveryFee === 0 ? 'FREE' : '£' + o.deliveryFee.toFixed(2) }}</dd>
+            </div>
+            @if (o.pointsRedeemed > 0) {
+              <div class="confirm-totals__row confirm-totals__row--discount">
+                <dt>Points redeemed</dt>
+                <dd>−{{ o.pointsRedeemed }} pts</dd>
+              </div>
+            }
+            <div class="confirm-totals__row confirm-totals__row--total">
+              <dt>Total paid</dt>
+              <dd>£{{ o.total.toFixed(2) }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <!-- Sidebar: delivery + points -->
+        <aside>
+
+          <!-- Delivery address -->
+          <div class="confirm-card confirm-card--sm">
+            <h2 class="confirm-card__title">Delivering to</h2>
+            <address class="confirm-address">
+              {{ o.deliveryAddress.firstName }} {{ o.deliveryAddress.lastName }}<br />
+              {{ o.deliveryAddress.line1 }}<br />
+              @if (o.deliveryAddress.line2) { {{ o.deliveryAddress.line2 }}<br /> }
+              {{ o.deliveryAddress.city }}, {{ o.deliveryAddress.postcode }}<br />
+              {{ o.deliveryAddress.country }}
+            </address>
+            <p class="confirm-delivery-date">
+              📦 Estimated delivery:
+              <strong>{{ o.estimatedDelivery | date: 'EEE d MMM yyyy' }}</strong>
+            </p>
+          </div>
+
+          <!-- Points earned -->
+          @if (o.pointsEarned > 0 || o.pointsRedeemed > 0) {
+            <div class="confirm-card confirm-card--sm confirm-card--points">
+              <h2 class="confirm-card__title">🎁 Gift Points</h2>
+              @if (o.pointsEarned > 0) {
+                <p class="confirm-points__earned">+{{ o.pointsEarned }} pts earned on this order</p>
+              }
+              @if (o.pointsRedeemed > 0) {
+                <p class="confirm-points__redeemed">{{ o.pointsRedeemed }} pts redeemed</p>
+              }
+              @if (authSvc.currentUser()) {
+                <p class="confirm-points__balance">
+                  New balance: <strong>{{ pointsBalance() }} pts</strong>
+                </p>
+              }
+            </div>
+          }
+
+        </aside>
+
+      </div><!-- /confirm-layout -->
+
+      <!-- ══ CTA buttons ═══════════════════════════════════════════════════════ -->
+      <div class="confirm-actions">
+        <a class="btn btn--primary" routerLink="/catalogue">Continue Shopping</a>
+        @if (authSvc.isLoggedIn()) {
+          <a class="btn btn--secondary" routerLink="/orders">View My Orders</a>
+        }
+      </div>
+
+    } @else {
+
+      <!-- Order not found -->
+      <div class="confirm-not-found">
+        <p class="confirm-not-found__icon">🤔</p>
+        <h1>Order not found</h1>
+        <p>We couldn't find details for this order.</p>
+        <a class="btn btn--primary" routerLink="/">Go Home</a>
+      </div>
+
+    }
+
+  </div>
+</main>

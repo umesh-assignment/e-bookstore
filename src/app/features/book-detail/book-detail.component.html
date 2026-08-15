@@ -1,0 +1,315 @@
+<main class="page" id="main-content">
+
+  <!-- Breadcrumb -->
+  <div class="container">
+    <app-breadcrumb [crumbs]="breadcrumbs()" />
+  </div>
+
+  <!-- ══ 404 / Loading ════════════════════════════════════════════════════════ -->
+  @if (bookSvc.isLoading()) {
+    <div class="container">
+      <div class="book-detail-skeleton">
+        <div class="book-detail-skeleton__cover skeleton"></div>
+        <div class="book-detail-skeleton__body">
+          <div class="skeleton skeleton--title"></div>
+          <div class="skeleton skeleton--subtitle"></div>
+          <div class="skeleton skeleton--text"></div>
+          <div class="skeleton skeleton--text"></div>
+          <div class="skeleton skeleton--text skeleton--short"></div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (!bookSvc.isLoading() && !book()) {
+    <div class="container">
+      <div class="not-found-msg">
+        <p class="not-found-msg__emoji">📚</p>
+        <h1 class="not-found-msg__title">Book not found</h1>
+        <p class="not-found-msg__sub">This book doesn't exist in our catalogue.</p>
+        <a class="btn btn--primary" routerLink="/catalogue">Browse all books</a>
+      </div>
+    </div>
+  }
+
+  <!-- ══ Book Detail ══════════════════════════════════════════════════════════ -->
+  @if (!bookSvc.isLoading() && book(); as b) {
+
+    <!-- ── Hero section ─────────────────────────────────────────────────────── -->
+    <section class="book-hero">
+      <div class="container">
+        <div class="book-hero__layout">
+
+          <!-- Cover image -->
+          <div class="book-hero__cover-wrap">
+            @if (!imageError()) {
+              <img
+                class="book-hero__cover"
+                [src]="b.coverUrl"
+                [alt]="b.title + ' cover'"
+                (error)="onImageError()"
+                loading="eager" />
+            } @else {
+              <div class="book-hero__cover-placeholder" aria-label="Cover image unavailable">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+              </div>
+            }
+
+            <!-- Badges -->
+            <div class="book-hero__badges">
+              @if (!b.inStock) {
+                <app-badge label="Out of stock" variant="muted" />
+              }
+              @if (b.isNewArrival) {
+                <app-badge label="New" variant="success" />
+              }
+              @if (discountPct() > 0) {
+                <app-badge [label]="'-' + discountPct() + '%'" variant="danger" />
+              }
+            </div>
+          </div>
+
+          <!-- Info column -->
+          <div class="book-hero__info">
+
+            <div class="book-hero__genre-row">
+              <a class="book-hero__genre-link" [routerLink]="['/catalogue']" [queryParams]="{ genre: b.genre }">
+                {{ b.genre }}
+              </a>
+            </div>
+
+            <h1 class="book-hero__title">{{ b.title }}</h1>
+            <p class="book-hero__author">by <strong>{{ b.author }}</strong></p>
+
+            <!-- Rating -->
+            <div class="book-hero__rating">
+              <app-star-rating [rating]="b.rating" [size]="'md'" [showCount]="false" />
+              <span class="book-hero__rating-value">{{ b.rating.toFixed(1) }}</span>
+              <a class="book-hero__rating-count" href="#reviews">({{ reviewCount() }} reviews)</a>
+            </div>
+
+            <!-- Price -->
+            <div class="book-hero__price-block">
+              <span class="price price--lg">£{{ b.price.toFixed(2) }}</span>
+              @if (b.originalPrice && b.originalPrice > b.price) {
+                <span class="price price--original">£{{ b.originalPrice.toFixed(2) }}</span>
+                <span class="price price--save">Save £{{ (b.originalPrice - b.price).toFixed(2) }}</span>
+              }
+            </div>
+
+            <!-- Stock status -->
+            <p class="book-hero__stock" [class.book-hero__stock--out]="!b.inStock">
+              @if (b.inStock) {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                In stock — ready to ship
+              } @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                Out of stock
+              }
+            </p>
+
+            <!-- Quantity + Add to cart -->
+            @if (b.inStock) {
+              <div class="book-hero__buy">
+                <div class="qty-control" role="group" aria-label="Quantity">
+                  <button class="qty-control__btn" type="button" (click)="decrementQty()" [disabled]="quantity() <= 1" aria-label="Decrease quantity">−</button>
+                  <span class="qty-control__val" aria-live="polite">{{ quantity() }}</span>
+                  <button class="qty-control__btn" type="button" (click)="incrementQty()" [disabled]="quantity() >= 10" aria-label="Increase quantity">+</button>
+                </div>
+
+                @if (inCart()) {
+                  <button class="btn btn--secondary book-hero__cart-btn" type="button" (click)="goToCart()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    View Basket
+                  </button>
+                } @else {
+                  <button class="btn btn--primary book-hero__cart-btn" type="button" (click)="addToCart()" [disabled]="!b.inStock">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Add to Basket
+                  </button>
+                }
+
+                <button
+                  class="btn book-hero__wish-btn"
+                  [class.book-hero__wish-btn--active]="inWishlist()"
+                  type="button"
+                  (click)="toggleWishlist()"
+                  [attr.aria-label]="inWishlist() ? 'Remove from wishlist' : 'Add to wishlist'">
+                  <svg width="18" height="18" viewBox="0 0 24 24" [attr.fill]="inWishlist() ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            }
+
+            <!-- Trust bar -->
+            <ul class="book-hero__trust" aria-label="Delivery and returns">
+              <li>🚚 Free delivery on orders over £20</li>
+              <li>↩ Free 30-day returns</li>
+              <li>🔒 Secure checkout</li>
+            </ul>
+
+          </div><!-- /info -->
+        </div><!-- /layout -->
+      </div><!-- /container -->
+    </section>
+
+    <!-- ── Tabs: Description / Details ──────────────────────────────────────── -->
+    <section class="book-tabs">
+      <div class="container">
+        <div class="book-tabs__body">
+
+          <!-- Description -->
+          <div class="book-tabs__section">
+            <h2 class="book-tabs__heading">About this book</h2>
+            <p class="book-tabs__description">{{ b.description }}</p>
+
+            <!-- Tags -->
+            @if (b.tags?.length) {
+              <div class="book-tabs__tags">
+                @for (tag of b.tags; track tag) {
+                  <a class="tag-chip" [routerLink]="['/catalogue']" [queryParams]="{ q: tag }">#{{ tag }}</a>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Book metadata -->
+          <div class="book-tabs__section book-tabs__section--meta">
+            <h2 class="book-tabs__heading">Book details</h2>
+            <dl class="book-meta">
+              <div class="book-meta__row">
+                <dt>ISBN</dt>
+                <dd>{{ b.isbn }}</dd>
+              </div>
+              <div class="book-meta__row">
+                <dt>Publisher</dt>
+                <dd>{{ b.publisher }}</dd>
+              </div>
+              <div class="book-meta__row">
+                <dt>Published</dt>
+                <dd>{{ b.publishedDate }}</dd>
+              </div>
+              <div class="book-meta__row">
+                <dt>Pages</dt>
+                <dd>{{ b.pages }}</dd>
+              </div>
+              <div class="book-meta__row">
+                <dt>Language</dt>
+                <dd>{{ b.language }}</dd>
+              </div>
+              <div class="book-meta__row">
+                <dt>Genre</dt>
+                <dd>
+                  <a [routerLink]="['/catalogue']" [queryParams]="{ genre: b.genre }" class="book-meta__genre-link">
+                    {{ b.genre }}
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Reviews ───────────────────────────────────────────────────────────── -->
+    <section class="reviews-section" id="reviews" aria-label="Customer reviews">
+      <div class="container">
+
+        <div class="reviews-section__header">
+          <h2 class="reviews-section__title">Customer Reviews</h2>
+          <span class="reviews-section__count">{{ reviewCount() }} review{{ reviewCount() === 1 ? '' : 's' }}</span>
+        </div>
+
+        @if (reviewCount() > 0) {
+          <!-- Rating summary -->
+          <div class="reviews-summary">
+            <div class="reviews-summary__score">
+              <span class="reviews-summary__big">{{ b.rating.toFixed(1) }}</span>
+              <app-star-rating [rating]="b.rating" [size]="'lg'" [showCount]="false" />
+              <span class="reviews-summary__out-of">out of 5</span>
+            </div>
+
+            <div class="reviews-summary__breakdown">
+              @for (row of starBreakdown(); track row.stars) {
+                <div class="reviews-summary__bar-row">
+                  <span class="reviews-summary__star-label">{{ row.stars }}★</span>
+                  <div class="reviews-summary__bar" role="presentation">
+                    <div class="reviews-summary__bar-fill" [style.width.%]="row.pct"></div>
+                  </div>
+                  <span class="reviews-summary__bar-count">{{ row.count }}</span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Review list -->
+          <div class="review-list" role="list">
+            @for (review of visibleReviews(); track review.id) {
+              <article class="review-card" role="listitem">
+                <div class="review-card__header">
+                  <div class="review-card__meta">
+                    <span class="review-card__author">{{ review.reviewerName }}</span>
+                    <span class="review-card__date">{{ review.date }}</span>
+                  </div>
+                  <app-star-rating [rating]="review.rating" [size]="'sm'" [showCount]="false" />
+                </div>
+                <h3 class="review-card__title">{{ review.title }}</h3>
+                <p class="review-card__body">{{ review.body }}</p>
+              </article>
+            }
+          </div>
+
+          @if (reviewCount() > 3) {
+            <button class="btn btn--secondary reviews-section__toggle" type="button" (click)="toggleAllReviews()">
+              {{ showAllReviews() ? 'Show fewer reviews' : 'Show all ' + reviewCount() + ' reviews' }}
+            </button>
+          }
+        } @else if (!reviewsLoaded()) {
+          <p class="reviews-section__loading">Loading reviews…</p>
+        } @else {
+          <p class="reviews-section__empty">No reviews yet. Be the first!</p>
+        }
+
+      </div>
+    </section>
+
+    <!-- ── Cross-sell: Customers also bought ───────────────────────────────── -->
+    @if (crossSellBooks().length > 0) {
+      <section class="related-section" aria-label="Customers also bought">
+        <div class="container">
+          <h2 class="related-section__title">Customers also bought</h2>
+          <div class="related-grid">
+            @for (rb of crossSellBooks(); track rb.id) {
+              <app-book-card [book]="rb" [compact]="true" />
+            }
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- ── Similar books ───────────────────────────────────────────────────── -->
+    @if (similarBooks().length > 0) {
+      <section class="related-section" aria-label="More in {{ b.genre }}">
+        <div class="container">
+          <div class="related-section__header">
+            <h2 class="related-section__title">More in {{ b.genre }}</h2>
+            <a class="related-section__all" [routerLink]="['/catalogue']" [queryParams]="{ genre: b.genre }">
+              Browse all {{ b.genre }} →
+            </a>
+          </div>
+          <div class="related-grid">
+            @for (rb of similarBooks(); track rb.id) {
+              <app-book-card [book]="rb" [compact]="true" />
+            }
+          </div>
+        </div>
+      </section>
+    }
+
+  } <!-- /if book -->
+
+</main>

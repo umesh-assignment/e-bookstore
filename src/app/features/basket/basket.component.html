@@ -1,0 +1,191 @@
+<main class="page" id="main-content">
+
+  <div class="container">
+    <app-breadcrumb [crumbs]="breadcrumbs" />
+  </div>
+
+  <!-- ══ Page header ══════════════════════════════════════════════════════════ -->
+  <section class="basket-header">
+    <div class="container">
+      <div class="basket-header__row">
+        <h1 class="basket-header__title">
+          🛒 Your Basket
+          @if (cartSvc.totalItems() > 0) {
+            <span class="basket-header__count">({{ cartSvc.totalItems() }} item{{ cartSvc.totalItems() === 1 ? '' : 's' }})</span>
+          }
+        </h1>
+        @if (cartSvc.items().length > 0) {
+          <a class="basket-header__continue" routerLink="/catalogue">← Continue Shopping</a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <!-- ══ Empty basket ════════════════════════════════════════════════════════ -->
+    @if (cartSvc.items().length === 0) {
+      <div class="basket-empty">
+        <app-empty-state
+          icon="basket"
+          title="Your basket is empty"
+          message="Browse our catalogue and add something you'll love."
+          ctaLabel="Browse Books"
+          ctaLink="/catalogue" />
+      </div>
+    }
+
+    <!-- ══ Basket content ══════════════════════════════════════════════════════ -->
+    @if (cartSvc.items().length > 0) {
+      <div class="basket-layout">
+
+        <!-- ── Line items ───────────────────────────────────────────────────── -->
+        <div class="basket-items">
+
+          <!-- Free delivery progress -->
+          @if (amountToFreeDelivery() > 0) {
+            <div class="delivery-progress" role="status" aria-label="Free delivery progress">
+              <div class="delivery-progress__bar-wrap">
+                <div
+                  class="delivery-progress__bar"
+                  [style.width.%]="(cartSvc.subtotal() / FREE_DELIVERY_THRESHOLD) * 100"
+                  role="presentation">
+                </div>
+              </div>
+              <p class="delivery-progress__msg">
+                Add <strong>£{{ amountToFreeDelivery().toFixed(2) }}</strong> more for free delivery!
+              </p>
+            </div>
+          } @else {
+            <div class="delivery-progress delivery-progress--achieved" role="status">
+              <span>🎉 You've got free delivery!</span>
+            </div>
+          }
+
+          <!-- Item list -->
+          <ul class="item-list" role="list" aria-label="Basket items">
+            @for (item of cartSvc.items(); track item.bookId) {
+              <li class="item-card" role="listitem">
+
+                <!-- Cover -->
+                <a class="item-card__cover-link" [routerLink]="['/catalogue', item.bookId]" [attr.aria-label]="'View ' + item.title">
+                  <img
+                    class="item-card__cover"
+                    [src]="item.coverUrl"
+                    [alt]="item.title"
+                    loading="lazy"
+                    onerror="this.src='/assets/images/placeholder-cover.svg'" />
+                </a>
+
+                <!-- Details -->
+                <div class="item-card__details">
+                  <a class="item-card__title" [routerLink]="['/catalogue', item.bookId]">{{ item.title }}</a>
+                  <p class="item-card__author">{{ item.author }}</p>
+                  <p class="item-card__unit-price">£{{ item.price.toFixed(2) }} each</p>
+
+                  <div class="item-card__actions">
+                    <app-quantity-selector
+                      [value]="item.quantity"
+                      [min]="1"
+                      [max]="10"
+                      [itemLabel]="item.title"
+                      (changed)="onQuantityChange(item.bookId, $event)" />
+
+                    <span class="item-card__line-total">£{{ (item.price * item.quantity).toFixed(2) }}</span>
+                  </div>
+
+                  <div class="item-card__btns">
+                    @if (isLoggedIn()) {
+                      <button
+                        class="item-card__btn item-card__btn--ghost"
+                        type="button"
+                        (click)="moveToWishlist(item.bookId)"
+                        [attr.aria-label]="'Save ' + item.title + ' to wishlist'">
+                        ♡ Save for later
+                      </button>
+                    }
+                    <button
+                      class="item-card__btn item-card__btn--danger"
+                      type="button"
+                      (click)="removeItem(item.bookId)"
+                      [attr.aria-label]="'Remove ' + item.title + ' from basket'">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+
+              </li>
+            }
+          </ul>
+
+        </div><!-- /basket-items -->
+
+        <!-- ── Order summary sidebar ─────────────────────────────────────────── -->
+        <aside class="order-summary" aria-label="Order summary">
+          <h2 class="order-summary__title">Order Summary</h2>
+
+          <dl class="order-summary__rows">
+            <div class="order-summary__row">
+              <dt>Subtotal ({{ cartSvc.totalItems() }} item{{ cartSvc.totalItems() === 1 ? '' : 's' }})</dt>
+              <dd>£{{ cartSvc.subtotal().toFixed(2) }}</dd>
+            </div>
+            <div class="order-summary__row">
+              <dt>Delivery</dt>
+              <dd>
+                @if (cartSvc.deliveryFee() === 0) {
+                  <span class="order-summary__free">FREE</span>
+                } @else {
+                  £{{ cartSvc.deliveryFee().toFixed(2) }}
+                }
+              </dd>
+            </div>
+          </dl>
+
+          <div class="order-summary__total">
+            <span>Total</span>
+            <span class="order-summary__total-amount">£{{ cartSvc.total().toFixed(2) }}</span>
+          </div>
+
+          <p class="order-summary__vat">Includes VAT where applicable</p>
+
+          <a
+            class="btn btn--primary order-summary__checkout"
+            routerLink="/checkout"
+            aria-label="Proceed to checkout">
+            Proceed to Checkout →
+          </a>
+
+          @if (!isLoggedIn()) {
+            <p class="order-summary__login-hint">
+              <a routerLink="/login" [queryParams]="{ returnUrl: '/checkout' }">Sign in</a> to use gift points and save your details.
+            </p>
+          }
+
+          <!-- Security badges -->
+          <ul class="order-summary__trust" aria-label="Security information">
+            <li>🔒 Secure checkout</li>
+            <li>↩ Free 30-day returns</li>
+          </ul>
+
+        </aside><!-- /order-summary -->
+
+      </div><!-- /basket-layout -->
+    }
+
+  </div><!-- /container -->
+
+  <!-- ══ You might also like ═════════════════════════════════════════════════ -->
+  @if (suggestions().length > 0) {
+    <section class="suggestions" aria-label="You might also like">
+      <div class="container">
+        <h2 class="suggestions__title">You might also like</h2>
+        <div class="suggestions__grid">
+          @for (book of suggestions(); track book.id) {
+            <app-book-card [book]="book" [compact]="true" />
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+</main>

@@ -1,0 +1,225 @@
+:host { display: block; }
+
+.order-not-found {
+  text-align: center;
+  padding: var(--space-12) 0;
+  h1 { color: var(--color-primary); margin-bottom: var(--space-3); }
+  p  { color: var(--color-muted); margin-bottom: var(--space-6); }
+}
+
+// ══════════════════════════════════════════════════════════
+// HEADER
+// ══════════════════════════════════════════════════════════
+.order-detail-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-6) 0;
+
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 var(--space-1);
+  }
+
+  &__date {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin: 0;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// LAYOUT
+// ══════════════════════════════════════════════════════════
+.order-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  padding: var(--space-8) 0 var(--space-12);
+  align-items: start;
+
+  @media (min-width: 768px) { grid-template-columns: 1fr 280px; }
+}
+
+// ══════════════════════════════════════════════════════════
+// CARD
+// ══════════════════════════════════════════════════════════
+.order-detail-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-4);
+
+  &:last-child { margin-bottom: 0; }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 var(--space-5);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  &__header &__title { margin: 0; }
+
+  &--sm { padding: var(--space-5); }
+}
+
+// ══════════════════════════════════════════════════════════
+// ITEMS LIST
+// ══════════════════════════════════════════════════════════
+.order-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.order-item {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: var(--space-4);
+  align-items: start;
+
+  &__cover {
+    width: 72px;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+    line-height: 1.3;
+    &:hover { text-decoration: underline; }
+  }
+
+  &__author, &__qty {
+    font-size: 12px;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-2);
+  }
+
+  &__price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  &__reorder { font-size: 12px; }
+}
+
+// ══════════════════════════════════════════════════════════
+// TOTALS
+// ══════════════════════════════════════════════════════════
+.order-totals {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    gap: var(--space-2);
+    dt { color: var(--color-muted); }
+    dd { margin: 0; font-weight: 500; }
+
+    &--discount { dt, dd { color: #16A34A; } }
+
+    &--total {
+      border-top: 1px solid var(--color-border);
+      padding-top: var(--space-2);
+      margin-top: var(--space-1);
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--color-primary);
+      dd { font-size: 18px; }
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// CANCEL BUTTON
+// ══════════════════════════════════════════════════════════
+.order-detail-cancel {
+  border: 1.5px solid var(--color-danger);
+  color: var(--color-danger);
+  background: none;
+  width: 100%;
+  justify-content: center;
+  margin-top: var(--space-2);
+  transition: background-color var(--transition-fast);
+  &:hover { background: rgba(220, 38, 38, 0.06); }
+}
+
+// ══════════════════════════════════════════════════════════
+// SIDEBAR DETAILS
+// ══════════════════════════════════════════════════════════
+.order-addr {
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+}
+
+.order-delivery-est {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: 0;
+  strong { color: var(--color-text); }
+}
+
+.order-payment-method {
+  font-size: 14px;
+  color: var(--color-text);
+  margin: 0 0 var(--space-2);
+}
+
+.order-points-earned {
+  font-size: 13px;
+  font-weight: 700;
+  color: #16A34A;
+  margin: 0;
+}
+
+// ── Small button modifier ───────────────────────────────
+.btn--sm {
+  height: 32px;
+  padding: 0 var(--space-3);
+  font-size: 13px;
+}

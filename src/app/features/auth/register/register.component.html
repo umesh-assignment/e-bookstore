@@ -1,0 +1,96 @@
+<main class="auth-page" id="main-content">
+  <div class="auth-card">
+
+    <!-- Brand -->
+    <a class="auth-card__brand" routerLink="/" aria-label="Back to e-Bookstore home">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      <span>e-Bookstore</span>
+    </a>
+
+    <h1 class="auth-card__title">Create your account</h1>
+    <p class="auth-card__sub">Start with 200 welcome gift points 🎁</p>
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="auth-card__error" role="alert" aria-live="assertive">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        {{ error() }}
+      </div>
+    }
+
+    <form class="auth-form" (ngSubmit)="onSubmit()" novalidate aria-label="Registration form">
+
+      <!-- Name row -->
+      <div class="auth-form__row">
+        <div class="auth-form__field">
+          <label class="auth-form__label" for="reg-first">First name</label>
+          <input id="reg-first" class="auth-form__input" type="text" [(ngModel)]="firstName" name="firstName" placeholder="Jane" autocomplete="given-name" required aria-required="true" />
+        </div>
+        <div class="auth-form__field">
+          <label class="auth-form__label" for="reg-last">Last name</label>
+          <input id="reg-last" class="auth-form__input" type="text" [(ngModel)]="lastName" name="lastName" placeholder="Smith" autocomplete="family-name" required aria-required="true" />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="auth-form__field">
+        <label class="auth-form__label" for="reg-email">Email address</label>
+        <input id="reg-email" class="auth-form__input" type="email" [(ngModel)]="email" name="email" placeholder="you@example.com" autocomplete="email" required aria-required="true" />
+      </div>
+
+      <!-- Password -->
+      <div class="auth-form__field">
+        <label class="auth-form__label" for="reg-password">Password <span class="auth-form__hint">(min 8 characters)</span></label>
+        <div class="auth-form__pass-wrap">
+          <input
+            id="reg-password"
+            class="auth-form__input"
+            [type]="showPassword() ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Create a strong password"
+            autocomplete="new-password"
+            required
+            aria-required="true" />
+          <button class="auth-form__toggle-pass" type="button" (click)="togglePassword()" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+            {{ showPassword() ? '🙈' : '👁' }}
+          </button>
+        </div>
+
+        <!-- Password strength -->
+        @if (passwordStrength) {
+          <div class="password-strength" [class]="'password-strength--' + passwordStrength" aria-live="polite">
+            <div class="password-strength__bar"></div>
+            <span class="password-strength__label">
+              {{ passwordStrength === 'weak' ? 'Weak' : passwordStrength === 'medium' ? 'Medium' : 'Strong' }}
+            </span>
+          </div>
+        }
+      </div>
+
+      <!-- Confirm password -->
+      <div class="auth-form__field">
+        <label class="auth-form__label" for="reg-confirm">Confirm password</label>
+        <input id="reg-confirm" class="auth-form__input" type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Repeat your password" autocomplete="new-password" required aria-required="true" />
+      </div>
+
+      <button class="btn btn--primary auth-form__submit" type="submit" [disabled]="isLoading()" aria-label="Create account">
+        @if (isLoading()) {
+          <span class="auth-form__spinner" aria-hidden="true"></span>
+          Creating account…
+        } @else {
+          Create Account
+        }
+      </button>
+
+    </form>
+
+    <p class="auth-card__switch">
+      Already have an account? <a routerLink="/login">Sign in</a>
+    </p>
+
+  </div>
+</main>

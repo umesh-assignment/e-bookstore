@@ -1,52 +1,148 @@
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <div class="container navbar__inner">
 
-    <!-- Brand / Logo -->
-    <a class="navbar__brand" routerLink="/" aria-label="e-Bookstore home">
-      <svg class="navbar__logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+    <!-- ── Brand ─────────────────────────────────────────────────────── -->
+    <a class="navbar__brand" routerLink="/" aria-label="e-Bookstore home"
+       (click)="closeMobileMenu()">
+      <svg class="navbar__logo-icon" width="28" height="28" viewBox="0 0 28 28"
+           fill="none" aria-hidden="true">
         <rect width="28" height="28" rx="6" fill="currentColor"/>
         <path d="M7 8h8a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7V8z" fill="white" opacity="0.9"/>
         <path d="M15 8h2a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-2V8z" fill="white" opacity="0.5"/>
-        <path d="M8 11h6M8 13.5h6M8 16h4" stroke="#1A3A5C" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M8 11h6M8 13.5h6M8 16h4" stroke="#1A3A5C" stroke-width="1.2"
+              stroke-linecap="round"/>
       </svg>
       <span class="navbar__brand-text">e-Bookstore</span>
     </a>
 
-    <!-- Desktop Nav Links -->
+    <!-- ── Desktop Nav Links ──────────────────────────────────────────── -->
     <ul class="navbar__links" role="list">
       <li>
         <a class="navbar__link" routerLink="/" routerLinkActive="navbar__link--active"
            [routerLinkActiveOptions]="{ exact: true }">Home</a>
       </li>
       <li>
-        <a class="navbar__link" routerLink="/catalogue" routerLinkActive="navbar__link--active">Browse</a>
+        <a class="navbar__link" routerLink="/catalogue"
+           routerLinkActive="navbar__link--active">Browse</a>
       </li>
+      @if (isLoggedIn()) {
+        <li>
+          <a class="navbar__link" routerLink="/orders"
+             routerLinkActive="navbar__link--active">My Orders</a>
+        </li>
+        <li>
+          <a class="navbar__link" routerLink="/wishlist"
+             routerLinkActive="navbar__link--active">Wishlist</a>
+        </li>
+      }
     </ul>
 
-    <!-- Right-side actions -->
+    <!-- ── Inline Search Bar (desktop, expands on toggle) ────────────── -->
+    <div class="navbar__search-wrap" [class.navbar__search-wrap--open]="searchOpen">
+      <form class="navbar__search-form" role="search" (ngSubmit)="submitSearch()">
+        <label for="navbar-search-input" class="sr-only">Search books</label>
+        <input
+          id="navbar-search-input"
+          class="navbar__search-input"
+          type="search"
+          placeholder="Search books, authors…"
+          autocomplete="off"
+          [(ngModel)]="searchQuery"
+          name="searchQuery"
+          (keydown.escape)="toggleSearch()"
+          [attr.aria-expanded]="searchOpen"
+        />
+        <button class="navbar__search-submit btn-icon" type="submit" aria-label="Submit search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- ── Right Actions ─────────────────────────────────────────────── -->
     <div class="navbar__actions">
-      <!-- Basket icon -->
-      <a class="btn-icon navbar__action-btn" routerLink="/basket" aria-label="Basket">
+
+      <!-- Search toggle -->
+      <button class="btn-icon navbar__action-btn" type="button"
+              (click)="toggleSearch()"
+              [attr.aria-expanded]="searchOpen"
+              aria-label="Toggle search">
+        @if (!searchOpen) {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        } @else {
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        }
+      </button>
+
+      <!-- Basket with badge -->
+      <a class="btn-icon navbar__action-btn navbar__basket"
+         routerLink="/basket"
+         [attr.aria-label]="totalItems() > 0 ? totalItems() + ' items in basket' : 'Basket'">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
           <line x1="3" y1="6" x2="21" y2="6"/>
           <path d="M16 10a4 4 0 0 1-8 0"/>
         </svg>
+        @if (totalItems() > 0) {
+          <span class="navbar__badge" aria-hidden="true">
+            {{ totalItems() > 99 ? '99+' : totalItems() }}
+          </span>
+        }
       </a>
 
-      <!-- Auth links (static for Phase 1) -->
-      <a class="btn btn--primary btn--sm" routerLink="/login">Login</a>
+      <!-- Auth area -->
+      @if (isLoggedIn()) {
+        <!-- Account menu -->
+        <div class="navbar__account" [class.navbar__account--open]="accountMenuOpen">
+          <button class="navbar__avatar" type="button"
+                  (click)="toggleAccountMenu()"
+                  [attr.aria-expanded]="accountMenuOpen"
+                  [attr.aria-label]="'Account menu for ' + currentUser()?.firstName">
+            <span aria-hidden="true">{{ userInitial() }}</span>
+          </button>
+          <div class="navbar__account-menu" role="menu" aria-label="Account options">
+            <div class="navbar__account-header">
+              <span class="navbar__account-name">
+                {{ currentUser()?.firstName }} {{ currentUser()?.lastName }}
+              </span>
+              <span class="navbar__account-email">{{ currentUser()?.email }}</span>
+            </div>
+            <a class="navbar__account-item" role="menuitem" routerLink="/account"
+               (click)="accountMenuOpen = false">My Account</a>
+            <a class="navbar__account-item" role="menuitem" routerLink="/orders"
+               (click)="accountMenuOpen = false">My Orders</a>
+            <a class="navbar__account-item" role="menuitem" routerLink="/wishlist"
+               (click)="accountMenuOpen = false">Wishlist</a>
+            <hr class="navbar__account-divider"/>
+            <button class="navbar__account-item navbar__account-item--danger"
+                    role="menuitem" type="button" (click)="logout()">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      } @else {
+        <a class="btn btn--primary btn--sm" routerLink="/login">Login</a>
+      }
+
     </div>
 
-    <!-- Hamburger (mobile) -->
-    <button
-      class="btn-icon navbar__hamburger"
-      [attr.aria-expanded]="mobileMenuOpen"
-      aria-controls="mobile-menu"
-      aria-label="Toggle navigation menu"
-      (click)="toggleMobileMenu()"
-    >
+    <!-- ── Hamburger ──────────────────────────────────────────────────── -->
+    <button class="btn-icon navbar__hamburger" type="button"
+            [attr.aria-expanded]="mobileMenuOpen"
+            aria-controls="mobile-menu"
+            aria-label="Toggle navigation menu"
+            (click)="toggleMobileMenu()">
       @if (!mobileMenuOpen) {
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -56,41 +152,85 @@
         </svg>
       } @else {
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
+             stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       }
     </button>
 
-  </div>
+  </div><!-- /.navbar__inner -->
 
-  <!-- Mobile dropdown menu -->
-  <div
-    class="navbar__mobile-menu"
-    [class.navbar__mobile-menu--open]="mobileMenuOpen"
-    id="mobile-menu"
-    role="menu"
-  >
+  <!-- ── Mobile Search Bar ─────────────────────────────────────────────── -->
+  @if (searchOpen) {
+    <div class="navbar__mobile-search">
+      <form class="container navbar__mobile-search-form" role="search"
+            (ngSubmit)="submitSearch()">
+        <label for="mobile-search-input" class="sr-only">Search books</label>
+        <input id="mobile-search-input" class="navbar__mobile-search-input input"
+               type="search" placeholder="Search books, authors…"
+               autocomplete="off" [(ngModel)]="searchQuery" name="mobileSearchQuery"/>
+        <button class="btn btn--primary btn--sm" type="submit">Search</button>
+      </form>
+    </div>
+  }
+
+  <!-- ── Mobile Menu ───────────────────────────────────────────────────── -->
+  <div class="navbar__mobile-menu" [class.navbar__mobile-menu--open]="mobileMenuOpen"
+       id="mobile-menu">
     <ul role="list">
-      <li role="none">
-        <a class="navbar__mobile-link" role="menuitem" routerLink="/"
-           routerLinkActive="navbar__link--active" [routerLinkActiveOptions]="{ exact: true }"
+      <li>
+        <a class="navbar__mobile-link" routerLink="/"
+           routerLinkActive="navbar__mobile-link--active"
+           [routerLinkActiveOptions]="{ exact: true }"
            (click)="closeMobileMenu()">Home</a>
       </li>
-      <li role="none">
-        <a class="navbar__mobile-link" role="menuitem" routerLink="/catalogue"
-           routerLinkActive="navbar__link--active"
-           (click)="closeMobileMenu()">Browse</a>
+      <li>
+        <a class="navbar__mobile-link" routerLink="/catalogue"
+           routerLinkActive="navbar__mobile-link--active"
+           (click)="closeMobileMenu()">Browse Books</a>
       </li>
-      <li role="none">
-        <a class="navbar__mobile-link" role="menuitem" routerLink="/basket"
-           (click)="closeMobileMenu()">Basket</a>
+      @if (isLoggedIn()) {
+        <li>
+          <a class="navbar__mobile-link" routerLink="/orders"
+             routerLinkActive="navbar__mobile-link--active"
+             (click)="closeMobileMenu()">My Orders</a>
+        </li>
+        <li>
+          <a class="navbar__mobile-link" routerLink="/wishlist"
+             routerLinkActive="navbar__mobile-link--active"
+             (click)="closeMobileMenu()">Wishlist</a>
+        </li>
+        <li>
+          <a class="navbar__mobile-link" routerLink="/account"
+             (click)="closeMobileMenu()">My Account</a>
+        </li>
+      }
+      <li>
+        <a class="navbar__mobile-link" routerLink="/basket"
+           (click)="closeMobileMenu()">
+          Basket
+          @if (totalItems() > 0) {
+            <span class="navbar__mobile-badge">{{ totalItems() }}</span>
+          }
+        </a>
       </li>
-      <li role="none">
-        <a class="navbar__mobile-link" role="menuitem" routerLink="/login"
-           (click)="closeMobileMenu()">Login / Register</a>
-      </li>
+      <hr class="navbar__mobile-divider"/>
+      @if (isLoggedIn()) {
+        <li>
+          <button class="navbar__mobile-link navbar__mobile-link--danger" type="button"
+                  (click)="logout()">Sign Out</button>
+        </li>
+      } @else {
+        <li>
+          <a class="navbar__mobile-link" routerLink="/login"
+             (click)="closeMobileMenu()">Login</a>
+        </li>
+        <li>
+          <a class="navbar__mobile-link" routerLink="/register"
+             (click)="closeMobileMenu()">Create Account</a>
+        </li>
+      }
     </ul>
   </div>
+
 </nav>

@@ -1,0 +1,144 @@
+<main class="page" id="main-content">
+
+  <div class="container">
+    <app-breadcrumb [crumbs]="breadcrumbs" />
+  </div>
+
+  @if (user(); as u) {
+
+    <!-- ══ Profile header ════════════════════════════════════════════════════ -->
+    <section class="account-hero">
+      <div class="container">
+        <div class="account-hero__avatar" aria-hidden="true">
+          {{ u.firstName.charAt(0).toUpperCase() }}{{ u.lastName.charAt(0).toUpperCase() }}
+        </div>
+        <div class="account-hero__info">
+          <h1 class="account-hero__name">{{ u.firstName }} {{ u.lastName }}</h1>
+          <p class="account-hero__email">{{ u.email }}</p>
+          <p class="account-hero__since">Member since {{ u.createdAt | date: 'MMM yyyy' }}</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="container account-layout">
+
+      <!-- ── Main column ─────────────────────────────────────────────────── -->
+      <div class="account-main">
+
+        <!-- Gift points card -->
+        <div class="account-card account-card--points">
+          <div class="account-card__header">
+            <h2 class="account-card__title">🎁 Gift Points</h2>
+            <span class="points-badge">{{ pointsBal() }} pts</span>
+          </div>
+
+          <div class="points-balance">
+            <div class="points-balance__main">
+              <span class="points-balance__value">{{ pointsBal() }}</span>
+              <span class="points-balance__label">points available</span>
+            </div>
+            <div class="points-balance__gbp">≈ £{{ pointsInGBP().toFixed(2) }} discount</div>
+          </div>
+
+          <p class="points-info">Earn 10 pts per £1 spent. Redeem 100 pts = £1 off at checkout.</p>
+
+          <!-- Points history -->
+          @if (pointsHistory().length > 0) {
+            <div class="points-history">
+              <h3 class="points-history__title">History</h3>
+              <ul class="points-history__list" role="list">
+                @for (tx of pointsHistory().slice(0, 10); track tx.id) {
+                  <li class="points-tx" [class]="'points-tx--' + txColor(tx.type)" role="listitem">
+                    <span class="points-tx__icon" aria-hidden="true">{{ txIcon(tx.type) }}</span>
+                    <div class="points-tx__desc">
+                      <span class="points-tx__text">{{ tx.description }}</span>
+                      <span class="points-tx__date">{{ tx.date | date: 'd MMM yyyy' }}</span>
+                    </div>
+                    <span class="points-tx__pts">
+                      {{ txColor(tx.type) === 'positive' ? '+' : '−' }}{{ tx.points }} pts
+                    </span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+
+        <!-- Recent orders -->
+        <div class="account-card">
+          <div class="account-card__header">
+            <h2 class="account-card__title">Recent Orders</h2>
+            <a class="account-card__link" routerLink="/orders">View all</a>
+          </div>
+
+          @if (recentOrders().length === 0) {
+            <p class="account-card__empty">No orders yet.</p>
+          } @else {
+            <ul class="recent-orders" role="list">
+              @for (order of recentOrders(); track order.id) {
+                <li class="recent-order" role="listitem">
+                  <div class="recent-order__meta">
+                    <span class="recent-order__ref">#{{ order.id.slice(-8).toUpperCase() }}</span>
+                    <span class="recent-order__date">{{ order.createdAt | date: 'd MMM yyyy' }}</span>
+                  </div>
+                  <span class="recent-order__total">£{{ order.total.toFixed(2) }}</span>
+                  <a class="recent-order__link btn btn--secondary" [routerLink]="['/orders', order.id]">View</a>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+
+      </div><!-- /account-main -->
+
+      <!-- ── Sidebar ────────────────────────────────────────────────────── -->
+      <aside class="account-aside">
+
+        <!-- Quick links -->
+        <div class="account-card account-card--sm">
+          <h2 class="account-card__title">Quick Links</h2>
+          <nav aria-label="Account navigation">
+            <a class="account-nav-link" routerLink="/orders">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              My Orders
+            </a>
+            <a class="account-nav-link" routerLink="/wishlist">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              Wishlist
+            </a>
+            <a class="account-nav-link" routerLink="/basket">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              Basket
+            </a>
+          </nav>
+        </div>
+
+        <!-- Saved address -->
+        @if (u.savedAddress) {
+          <div class="account-card account-card--sm">
+            <h2 class="account-card__title">Saved Address</h2>
+            <address class="saved-addr">
+              {{ u.savedAddress.firstName }} {{ u.savedAddress.lastName }}<br />
+              {{ u.savedAddress.line1 }}<br />
+              @if (u.savedAddress.line2) { {{ u.savedAddress.line2 }}<br /> }
+              {{ u.savedAddress.city }}, {{ u.savedAddress.postcode }}<br />
+              {{ u.savedAddress.country }}
+            </address>
+          </div>
+        }
+
+        <!-- Sign out -->
+        <button
+          class="btn btn--secondary account-signout"
+          type="button"
+          (click)="authSvc.logout()">
+          Sign Out
+        </button>
+
+      </aside>
+
+    </div><!-- /account-layout -->
+
+  }<!-- /if user -->
+
+</main>

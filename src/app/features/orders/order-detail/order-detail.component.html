@@ -1,0 +1,176 @@
+<main class="page" id="main-content">
+
+  <div class="container">
+    <app-breadcrumb [crumbs]="breadcrumbs" />
+  </div>
+
+  @if (!order()) {
+    <div class="container">
+      <div class="order-not-found">
+        <p style="font-size: 48px">📦</p>
+        <h1>Order not found</h1>
+        <p>We couldn't find this order in your account.</p>
+        <a class="btn btn--primary" routerLink="/orders">Back to Orders</a>
+      </div>
+    </div>
+  }
+
+  @if (order(); as o) {
+
+    <!-- Cancel confirmation modal -->
+    <app-modal
+      [open]="showCancelModal()"
+      title="Cancel Order"
+      confirmLabel="Yes, cancel order"
+      cancelLabel="Keep order"
+      [destructive]="true"
+      (confirmed)="confirmCancel()"
+      (dismissed)="closeCancelModal()">
+      <p>Are you sure you want to cancel order <strong>#{{ o.id.slice(-8).toUpperCase() }}</strong>?</p>
+      <p style="color: var(--color-muted); font-size: 14px;">
+        Any points earned or redeemed on this order will be reversed.
+      </p>
+    </app-modal>
+
+    <section class="order-detail-header">
+      <div class="container">
+        <div class="order-detail-header__row">
+          <div class="order-detail-header__left">
+            <h1 class="order-detail-header__title">
+              Order #{{ o.id.slice(-8).toUpperCase() }}
+            </h1>
+            <p class="order-detail-header__date">
+              Placed {{ o.createdAt | date: 'EEEE d MMMM yyyy' }}
+            </p>
+          </div>
+          <app-badge [label]="o.status" [variant]="statusVariant(o.status)" />
+        </div>
+      </div>
+    </section>
+
+    <div class="container order-detail-layout">
+
+      <!-- ── Items ──────────────────────────────────────────────────────────── -->
+      <div class="order-detail-main">
+
+        <div class="order-detail-card">
+          <div class="order-detail-card__header">
+            <h2 class="order-detail-card__title">Items</h2>
+            @if (o.status !== 'Cancelled') {
+              <button
+                class="btn btn--secondary btn--sm"
+                type="button"
+                (click)="reorderAll()"
+                aria-label="Reorder all items">
+                Buy Again
+              </button>
+            }
+          </div>
+
+          <ul class="order-items-list" role="list">
+            @for (item of o.items; track item.bookId) {
+              <li class="order-item" role="listitem">
+                <img class="order-item__cover" [src]="item.coverUrl" [alt]="item.title" loading="lazy" />
+                <div class="order-item__info">
+                  <a class="order-item__title" [routerLink]="['/catalogue', item.bookId]">{{ item.title }}</a>
+                  <p class="order-item__author">{{ item.author }}</p>
+                  <p class="order-item__qty">Qty: {{ item.quantity }}</p>
+                </div>
+                <div class="order-item__right">
+                  <span class="order-item__price">£{{ (item.price * item.quantity).toFixed(2) }}</span>
+                  @if (o.status !== 'Cancelled') {
+                    <button
+                      class="btn btn--secondary btn--sm order-item__reorder"
+                      type="button"
+                      (click)="reorderItem(item)">
+                      Buy Again
+                    </button>
+                  }
+                </div>
+              </li>
+            }
+          </ul>
+
+          <dl class="order-totals">
+            <div class="order-totals__row">
+              <dt>Subtotal</dt>
+              <dd>£{{ o.subtotal.toFixed(2) }}</dd>
+            </div>
+            <div class="order-totals__row">
+              <dt>Delivery</dt>
+              <dd>{{ o.deliveryFee === 0 ? 'FREE' : '£' + o.deliveryFee.toFixed(2) }}</dd>
+            </div>
+            @if (o.pointsRedeemed > 0) {
+              <div class="order-totals__row order-totals__row--discount">
+                <dt>Points redeemed</dt>
+                <dd>−{{ o.pointsRedeemed }} pts (£{{ (o.pointsRedeemed / 100).toFixed(2) }})</dd>
+              </div>
+            }
+            <div class="order-totals__row order-totals__row--total">
+              <dt>Total</dt>
+              <dd>£{{ o.total.toFixed(2) }}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Cancel button (Processing only) -->
+        @if (o.status === 'Processing') {
+          <button
+            class="btn order-detail-cancel"
+            type="button"
+            (click)="openCancelModal()"
+            aria-label="Cancel this order">
+            Cancel Order
+          </button>
+        }
+
+      </div><!-- /order-detail-main -->
+
+      <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
+      <aside class="order-detail-aside">
+
+        <!-- Delivery info -->
+        <div class="order-detail-card order-detail-card--sm">
+          <h2 class="order-detail-card__title">Delivery</h2>
+          <address class="order-addr">
+            {{ o.deliveryAddress.firstName }} {{ o.deliveryAddress.lastName }}<br />
+            {{ o.deliveryAddress.line1 }}<br />
+            @if (o.deliveryAddress.line2) { {{ o.deliveryAddress.line2 }}<br /> }
+            {{ o.deliveryAddress.city }}, {{ o.deliveryAddress.postcode }}<br />
+            {{ o.deliveryAddress.country }}
+          </address>
+          <p class="order-delivery-est">
+            @if (o.status === 'Delivered') {
+              ✅ Delivered
+            } @else if (o.status === 'Cancelled') {
+              ❌ Cancelled
+            } @else {
+              📦 Est. delivery: <strong>{{ o.estimatedDelivery | date: 'EEE d MMM' }}</strong>
+            }
+          </p>
+        </div>
+
+        <!-- Payment -->
+        <div class="order-detail-card order-detail-card--sm">
+          <h2 class="order-detail-card__title">Payment</h2>
+          <p class="order-payment-method">
+            @if (o.payment.method === 'card') {
+              💳 Card ending {{ o.payment.last4 }}
+            } @else if (o.payment.method === 'points') {
+              🎁 Paid with gift points
+            } @else {
+              💳 Card ending {{ o.payment.last4 }} + 🎁 {{ o.payment.pointsUsed }} pts
+            }
+          </p>
+          @if (o.pointsEarned > 0) {
+            <p class="order-points-earned">+{{ o.pointsEarned }} pts earned</p>
+          }
+        </div>
+
+      </aside>
+
+    </div><!-- /order-detail-layout -->
+
+  }<!-- /if order -->
+
+</main>

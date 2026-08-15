@@ -1,0 +1,228 @@
+<main class="page" id="main-content">
+
+  <!-- Placing overlay -->
+  @if (isPlacing()) {
+    <app-spinner [overlay]="true" label="Placing your order…" />
+  }
+
+  <div class="container">
+    <app-breadcrumb [crumbs]="breadcrumbs" />
+  </div>
+
+  <div class="checkout-wrap container">
+
+    <!-- ══ Left: Steps ══════════════════════════════════════════════════════ -->
+    <div class="checkout-steps">
+
+      <!-- Step indicator -->
+      <div class="step-indicator" aria-label="Checkout steps">
+        <div class="step-indicator__step" [class.step-indicator__step--active]="currentStep() === 'address'" [class.step-indicator__step--done]="currentStep() === 'payment'">
+          <span class="step-indicator__num">1</span>
+          <span class="step-indicator__label">Delivery</span>
+        </div>
+        <div class="step-indicator__line"></div>
+        <div class="step-indicator__step" [class.step-indicator__step--active]="currentStep() === 'payment'">
+          <span class="step-indicator__num">2</span>
+          <span class="step-indicator__label">Payment</span>
+        </div>
+      </div>
+
+      <!-- ── Step 1: Address ─────────────────────────────────────────────── -->
+      @if (currentStep() === 'address') {
+        <section class="checkout-section" aria-label="Delivery address">
+          <h2 class="checkout-section__title">Delivery address</h2>
+
+          @if (addressError) {
+            <div class="checkout-error" role="alert">{{ addressError }}</div>
+          }
+
+          <form class="address-form" (ngSubmit)="goToPayment()" novalidate aria-label="Delivery address form">
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label" for="addr-first">First name <span aria-hidden="true">*</span></label>
+                <input id="addr-first" class="form-input" type="text" [(ngModel)]="address.firstName" name="firstName" autocomplete="given-name" required />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="addr-last">Last name <span aria-hidden="true">*</span></label>
+                <input id="addr-last" class="form-input" type="text" [(ngModel)]="address.lastName" name="lastName" autocomplete="family-name" required />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="addr-line1">Address line 1 <span aria-hidden="true">*</span></label>
+              <input id="addr-line1" class="form-input" type="text" [(ngModel)]="address.line1" name="line1" autocomplete="address-line1" placeholder="House number and street name" required />
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="addr-line2">Address line 2 <span class="form-label__optional">(optional)</span></label>
+              <input id="addr-line2" class="form-input" type="text" [(ngModel)]="address.line2" name="line2" autocomplete="address-line2" placeholder="Flat, apartment, etc." />
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label" for="addr-city">City <span aria-hidden="true">*</span></label>
+                <input id="addr-city" class="form-input" type="text" [(ngModel)]="address.city" name="city" autocomplete="address-level2" required />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="addr-postcode">Postcode <span aria-hidden="true">*</span></label>
+                <input id="addr-postcode" class="form-input" type="text" [(ngModel)]="address.postcode" name="postcode" autocomplete="postal-code" required />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="addr-country">Country <span aria-hidden="true">*</span></label>
+              <select id="addr-country" class="form-input form-input--select" [(ngModel)]="address.country" name="country" autocomplete="country-name">
+                <option>United Kingdom</option>
+                <option>United States</option>
+                <option>Canada</option>
+                <option>Australia</option>
+                <option>Ireland</option>
+              </select>
+            </div>
+
+            <button class="btn btn--primary checkout-section__next" type="submit">
+              Continue to Payment →
+            </button>
+
+          </form>
+        </section>
+      }
+
+      <!-- ── Step 2: Payment ────────────────────────────────────────────── -->
+      @if (currentStep() === 'payment') {
+        <section class="checkout-section" aria-label="Payment">
+
+          <!-- Delivery summary (edit link) -->
+          <div class="addr-summary">
+            <div class="addr-summary__text">
+              <strong>Delivering to:</strong>
+              {{ address.firstName }} {{ address.lastName }},
+              {{ address.line1 }}{{ address.line2 ? ', ' + address.line2 : '' }},
+              {{ address.city }}, {{ address.postcode }}
+            </div>
+            <button class="addr-summary__edit" type="button" (click)="backToAddress()">Edit</button>
+          </div>
+
+          <h2 class="checkout-section__title">Payment details</h2>
+
+          @if (paymentError) {
+            <div class="checkout-error" role="alert">{{ paymentError }}</div>
+          }
+
+          <!-- Gift points -->
+          @if (authSvc.currentUser() && pointsBalance() > 0) {
+            <div class="points-panel">
+              <div class="points-panel__row">
+                <div class="points-panel__info">
+                  <span class="points-panel__icon">🎁</span>
+                  <div>
+                    <p class="points-panel__title">Use Gift Points</p>
+                    <p class="points-panel__balance">You have {{ pointsBalance() }} pts (£{{ pointsInGBP().toFixed(2) }})</p>
+                  </div>
+                </div>
+                <label class="toggle-switch" [attr.aria-label]="'Use ' + pointsBalance() + ' gift points'">
+                  <input type="checkbox" [checked]="usePoints()" (change)="usePoints.set($any($event.target).checked)" />
+                  <span class="toggle-switch__slider"></span>
+                </label>
+              </div>
+              @if (usePoints()) {
+                <p class="points-panel__saving" role="status">
+                  Saving £{{ pointsDiscount().toFixed(2) }} ({{ pointsRedeemed() }} pts applied)
+                </p>
+              }
+            </div>
+          }
+
+          <!-- Mock payment notice -->
+          <div class="mock-notice" role="note">
+            🔒 This is a demo. No real payment will be processed. Use any card number.
+          </div>
+
+          <form class="payment-form" (ngSubmit)="placeOrder()" novalidate aria-label="Payment form">
+
+            <div class="form-field">
+              <label class="form-label" for="card-name">Name on card <span aria-hidden="true">*</span></label>
+              <input id="card-name" class="form-input" type="text" [(ngModel)]="cardName" name="cardName" autocomplete="cc-name" placeholder="Jane Smith" required />
+            </div>
+
+            <div class="form-field">
+              <label class="form-label" for="card-number">Card number <span aria-hidden="true">*</span></label>
+              <input id="card-number" class="form-input" type="text" [(ngModel)]="cardNumber" name="cardNumber" (input)="formatCardNumber()" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="19" required inputmode="numeric" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label class="form-label" for="card-expiry">Expiry (MM/YY) <span aria-hidden="true">*</span></label>
+                <input id="card-expiry" class="form-input" type="text" [(ngModel)]="cardExpiry" name="cardExpiry" (input)="formatExpiry()" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" required inputmode="numeric" />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="card-cvc">CVC <span aria-hidden="true">*</span></label>
+                <input id="card-cvc" class="form-input" type="text" [(ngModel)]="cardCvc" name="cardCvc" autocomplete="cc-csc" placeholder="123" maxlength="4" required inputmode="numeric" />
+              </div>
+            </div>
+
+            <button
+              class="btn btn--primary checkout-section__next"
+              type="submit"
+              [disabled]="isPlacing()"
+              [attr.aria-label]="'Place order for £' + orderTotal().toFixed(2)">
+              Place Order · £{{ orderTotal().toFixed(2) }}
+            </button>
+
+          </form>
+
+          <button class="checkout-section__back" type="button" (click)="backToAddress()">
+            ← Back to delivery
+          </button>
+
+        </section>
+      }
+
+    </div><!-- /checkout-steps -->
+
+    <!-- ══ Right: Order summary ══════════════════════════════════════════════ -->
+    <aside class="checkout-summary" aria-label="Order summary">
+      <h2 class="checkout-summary__title">Your Order</h2>
+
+      <ul class="checkout-summary__items" role="list">
+        @for (item of items(); track item.bookId) {
+          <li class="checkout-summary__item">
+            <img class="checkout-summary__cover" [src]="item.coverUrl" [alt]="item.title" loading="lazy" />
+            <div class="checkout-summary__item-info">
+              <p class="checkout-summary__item-title">{{ item.title }}</p>
+              <p class="checkout-summary__item-meta">{{ item.author }}</p>
+              <p class="checkout-summary__item-qty">Qty: {{ item.quantity }}</p>
+            </div>
+            <span class="checkout-summary__item-price">£{{ (item.price * item.quantity).toFixed(2) }}</span>
+          </li>
+        }
+      </ul>
+
+      <dl class="checkout-summary__totals">
+        <div class="checkout-summary__row">
+          <dt>Subtotal</dt>
+          <dd>£{{ subtotal().toFixed(2) }}</dd>
+        </div>
+        <div class="checkout-summary__row">
+          <dt>Delivery</dt>
+          <dd>{{ deliveryFee() === 0 ? 'FREE' : '£' + deliveryFee().toFixed(2) }}</dd>
+        </div>
+        @if (pointsDiscount() > 0) {
+          <div class="checkout-summary__row checkout-summary__row--discount">
+            <dt>Points discount</dt>
+            <dd>−£{{ pointsDiscount().toFixed(2) }}</dd>
+          </div>
+        }
+      </dl>
+
+      <div class="checkout-summary__total">
+        <span>Total</span>
+        <strong>£{{ orderTotal().toFixed(2) }}</strong>
+      </div>
+
+    </aside>
+
+  </div><!-- /checkout-wrap -->
+
+</main>

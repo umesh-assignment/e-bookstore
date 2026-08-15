@@ -1,0 +1,116 @@
+:host { display: block; }
+
+// ══════════════════════════════════════════════════════════
+// HEADER
+// ══════════════════════════════════════════════════════════
+.wishlist-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-6) 0 var(--space-5);
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__count {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--color-muted);
+  }
+
+  &__sub {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin: var(--space-1) 0 0;
+  }
+
+  &__move-all { flex-shrink: 0; }
+}
+
+// ══════════════════════════════════════════════════════════
+// GUEST / EMPTY
+// ══════════════════════════════════════════════════════════
+.wishlist-guest,
+.wishlist-empty {
+  padding: var(--space-12) 0;
+  text-align: center;
+}
+
+.wishlist-guest {
+  &__register {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin-top: var(--space-4);
+
+    a { color: var(--color-accent); }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// WISHLIST GRID
+// ══════════════════════════════════════════════════════════
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-8) 0 var(--space-12);
+
+  @media (min-width: 640px)  { grid-template-columns: repeat(3, 1fr); }
+  @media (min-width: 1024px) { grid-template-columns: repeat(4, 1fr); }
+}
+
+// ══════════════════════════════════════════════════════════
+// WISHLIST ITEM
+// ══════════════════════════════════════════════════════════
+.wishlist-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__btn {
+    flex: 1;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  &__remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    background: none;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-muted);
+    cursor: pointer;
+    min-height: unset;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-danger);
+      border-color: var(--color-danger);
+    }
+  }
+}

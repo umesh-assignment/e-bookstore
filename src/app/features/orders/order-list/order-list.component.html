@@ -1,0 +1,76 @@
+<main class="page" id="main-content">
+
+  <div class="container">
+    <app-breadcrumb [crumbs]="breadcrumbs" />
+  </div>
+
+  <section class="orders-header">
+    <div class="container">
+      <h1 class="orders-header__title">My Orders</h1>
+      @if (orders().length > 0) {
+        <p class="orders-header__sub">{{ orders().length }} order{{ orders().length === 1 ? '' : 's' }}</p>
+      }
+    </div>
+  </section>
+
+  <div class="container orders-content">
+
+    @if (orders().length === 0) {
+      <div class="orders-empty">
+        <app-empty-state
+          icon="orders"
+          title="No orders yet"
+          message="When you place an order, it'll appear here."
+          ctaLabel="Browse Books"
+          ctaLink="/catalogue" />
+      </div>
+    }
+
+    @if (orders().length > 0) {
+      <ul class="order-list" role="list">
+        @for (order of orders(); track order.id) {
+          <li class="order-card" role="listitem">
+
+            <div class="order-card__header">
+              <div class="order-card__meta">
+                <span class="order-card__ref">#{{ order.id.slice(-8).toUpperCase() }}</span>
+                <span class="order-card__date">{{ order.createdAt | date: 'd MMM yyyy' }}</span>
+              </div>
+              <app-badge [label]="order.status" [variant]="statusVariant(order.status)" />
+            </div>
+
+            <div class="order-card__covers">
+              @for (item of order.items.slice(0, 3); track item.bookId) {
+                <img class="order-card__cover" [src]="item.coverUrl" [alt]="item.title" loading="lazy" />
+              }
+              @if (order.items.length > 3) {
+                <span class="order-card__cover-more">+{{ order.items.length - 3 }}</span>
+              }
+            </div>
+
+            <div class="order-card__titles">
+              @for (item of order.items.slice(0, 2); track item.bookId) {
+                <p class="order-card__title-item">{{ item.title }}</p>
+              }
+              @if (order.items.length > 2) {
+                <p class="order-card__title-item order-card__title-item--more">
+                  + {{ order.items.length - 2 }} more item{{ order.items.length - 2 === 1 ? '' : 's' }}
+                </p>
+              }
+            </div>
+
+            <div class="order-card__footer">
+              <span class="order-card__total">£{{ order.total.toFixed(2) }}</span>
+              <a class="btn btn--secondary order-card__view-btn" [routerLink]="['/orders', order.id]">
+                View Order
+              </a>
+            </div>
+
+          </li>
+        }
+      </ul>
+    }
+
+  </div>
+
+</main>

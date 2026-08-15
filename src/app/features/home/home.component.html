@@ -1,38 +1,283 @@
 <main class="page home" id="main-content">
 
-  <!-- Hero Banner -->
-  <section class="hero" aria-label="Hero banner">
+  <!-- ════════════════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════════ -->
+  <section class="hero" aria-labelledby="hero-heading">
     <div class="container hero__inner">
+
       <div class="hero__content">
-        <h1 class="hero__title">Discover Your Next<br>Great Read</h1>
-        <p class="hero__subtitle">Browse thousands of books across every genre — from timeless classics to brand-new releases.</p>
+        <div class="hero__eyebrow">
+          <span class="hero__eyebrow-dot" aria-hidden="true"></span>
+          New arrivals every week
+        </div>
+        <h1 class="hero__title" id="hero-heading">
+          Discover Your<br>Next Great Read
+        </h1>
+        <p class="hero__subtitle">
+          Browse our handpicked collection of fiction, sci-fi, non-fiction,
+          thrillers, fantasy, and biography — all at your fingertips.
+        </p>
         <div class="hero__actions">
-          <a class="btn btn--primary btn--lg" routerLink="/catalogue">Browse Books</a>
-          <a class="btn btn--secondary btn--lg hero__btn-secondary" routerLink="/catalogue">New Arrivals</a>
+          <a class="btn btn--primary btn--lg" routerLink="/catalogue">Browse All Books</a>
+          <a class="btn btn--secondary btn--lg hero__btn-ghost"
+             routerLink="/catalogue" [queryParams]="{ filter: 'new' }">New Arrivals</a>
         </div>
       </div>
+
+      <!-- CSS book stack art -->
       <div class="hero__visual" aria-hidden="true">
-        <div class="hero__book-stack">
-          <div class="hero__book hero__book--1"></div>
-          <div class="hero__book hero__book--2"></div>
-          <div class="hero__book hero__book--3"></div>
+        <div class="hero__stack">
+          <div class="hero__book hero__book--back"></div>
+          <div class="hero__book hero__book--mid"></div>
+          <div class="hero__book hero__book--front">
+            <div class="hero__book-spine"></div>
+            <div class="hero__book-lines">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Trust bar -->
+    <div class="hero__trust">
+      <div class="container hero__trust-inner">
+        @for (stat of stats; track stat.label) {
+          <div class="hero__stat">
+            <span class="hero__stat-value">{{ stat.value }}</span>
+            <span class="hero__stat-label">{{ stat.label }}</span>
+          </div>
+        }
       </div>
     </div>
   </section>
 
-  <!-- Placeholder content — data loaded in Phase 4 -->
-  <section class="home-section" aria-label="Featured books coming soon">
+  <!-- ════════════════════════════════════════════════════
+       CATEGORIES
+  ════════════════════════════════════════════════════ -->
+  <section class="home-section home-section--light" aria-labelledby="cats-heading">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-header__title">Featured Books</h2>
-        <a class="section-header__link" routerLink="/catalogue">View all</a>
+        <h2 class="section-header__title" id="cats-heading">Browse by Genre</h2>
+        <a class="section-header__link" routerLink="/catalogue">All books →</a>
       </div>
-      <div class="home-placeholder">
-        <p>Book catalogue coming in Phase 4.</p>
-        <a class="btn btn--primary" routerLink="/catalogue">Browse All Books</a>
-      </div>
+
+      @if (isLoading()) {
+        <div class="category-grid">
+          @for (n of [1,2,3,4,5,6]; track n) {
+            <div class="category-chip category-chip--skeleton" aria-hidden="true">
+              <span class="skeleton-pulse category-chip__skeleton-icon"></span>
+              <span class="skeleton-pulse category-chip__skeleton-label"></span>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="category-grid" role="list">
+          @for (cat of categories(); track cat.id) {
+            <a
+              class="category-chip"
+              role="listitem"
+              [routerLink]="['/catalogue']"
+              [queryParams]="{ genre: cat.name }"
+              [attr.aria-label]="cat.name + ' – ' + (cat.bookCount ?? 0) + ' books'"
+            >
+              <span class="category-chip__icon" aria-hidden="true">{{ cat.icon }}</span>
+              <span class="category-chip__name">{{ cat.name }}</span>
+              @if (cat.bookCount) {
+                <span class="category-chip__count">{{ cat.bookCount }}</span>
+              }
+            </a>
+          }
+        </div>
+      }
     </div>
   </section>
+
+  <!-- ════════════════════════════════════════════════════
+       FEATURED BOOKS
+  ════════════════════════════════════════════════════ -->
+  <section class="home-section" aria-labelledby="featured-heading">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-header__title" id="featured-heading">Featured Books</h2>
+        <a class="section-header__link" routerLink="/catalogue">View all →</a>
+      </div>
+
+      @if (isLoading()) {
+        <div class="book-grid">
+          <app-skeleton-card [count]="4" />
+        </div>
+      } @else if (loadError()) {
+        <app-empty-state
+          title="Couldn't load books"
+          message="There was a problem loading the catalogue. Please try again."
+          ctaLabel="Retry"
+          ctaLink="/"
+          icon="book"
+        />
+      } @else if (featuredBooks().length === 0) {
+        <app-empty-state
+          title="No featured books right now"
+          message="Check back soon for our curated picks."
+          ctaLabel="Browse all books"
+          ctaLink="/catalogue"
+          icon="book"
+        />
+      } @else {
+        <div class="book-grid">
+          @for (book of featuredBooks(); track book.id) {
+            <app-book-card [book]="book" />
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       NEW ARRIVALS
+  ════════════════════════════════════════════════════ -->
+  <section class="home-section home-section--light" aria-labelledby="arrivals-heading">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-header__title" id="arrivals-heading">
+          New Arrivals
+          <app-badge label="New" variant="success" [pill]="true" />
+        </h2>
+        <a class="section-header__link" routerLink="/catalogue"
+           [queryParams]="{ filter: 'new' }">See all →</a>
+      </div>
+
+      @if (isLoading()) {
+        <div class="scroll-row">
+          <app-skeleton-card [count]="4" />
+        </div>
+      } @else {
+        <div class="scroll-row" role="list">
+          @for (book of newArrivals(); track book.id) {
+            <div class="scroll-row__item" role="listitem">
+              <app-book-card [book]="book" [compact]="true" />
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       TOP RATED
+  ════════════════════════════════════════════════════ -->
+  <section class="home-section" aria-labelledby="toprated-heading">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-header__title" id="toprated-heading">Top Rated</h2>
+        <a class="section-header__link" routerLink="/catalogue"
+           [queryParams]="{ sort: 'rating' }">See all →</a>
+      </div>
+
+      @if (isLoading()) {
+        <div class="book-grid">
+          <app-skeleton-card [count]="4" />
+        </div>
+      } @else {
+        <div class="scroll-row" role="list">
+          @for (book of topRated(); track book.id) {
+            <div class="scroll-row__item" role="listitem">
+              <app-book-card [book]="book" [compact]="true" />
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       RECOMMENDED FOR YOU
+  ════════════════════════════════════════════════════ -->
+  <section class="home-section home-section--light" aria-labelledby="rec-heading">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-header__title" id="rec-heading">
+          @if (isLoggedIn()) {
+            Recommended for You
+          } @else {
+            Staff Picks
+          }
+        </h2>
+        <a class="section-header__link" routerLink="/catalogue">Explore more →</a>
+      </div>
+
+      @if (isLoading()) {
+        <div class="book-grid">
+          <app-skeleton-card [count]="4" />
+        </div>
+      } @else if (recommendations().length === 0) {
+        <app-empty-state
+          title="No recommendations yet"
+          message="Browse some books and we'll personalise your picks."
+          ctaLabel="Browse Books"
+          ctaLink="/catalogue"
+          icon="book"
+        />
+      } @else {
+        <div class="book-grid">
+          @for (book of recommendations().slice(0, 4); track book.id) {
+            <app-book-card [book]="book" />
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       RECENTLY PURCHASED  (logged-in only)
+  ════════════════════════════════════════════════════ -->
+  @if (isLoggedIn() && recentlyPurchasedBooks().length > 0) {
+    <section class="home-section" aria-labelledby="recent-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-header__title" id="recent-heading">
+            Your Recent Purchases
+          </h2>
+          <a class="section-header__link" routerLink="/orders">View orders →</a>
+        </div>
+        <div class="scroll-row" role="list">
+          @for (book of recentlyPurchasedBooks(); track book?.id) {
+            @if (book) {
+              <div class="scroll-row__item" role="listitem">
+                <app-book-card [book]="book" [compact]="true" />
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- ════════════════════════════════════════════════════
+       CTA BANNER  (guests only)
+  ════════════════════════════════════════════════════ -->
+  @if (!isLoggedIn()) {
+    <section class="cta-banner" aria-labelledby="cta-heading">
+      <div class="container cta-banner__inner">
+        <div class="cta-banner__text">
+          <h2 class="cta-banner__title" id="cta-heading">
+            Join e-Bookstore today
+          </h2>
+          <p class="cta-banner__subtitle">
+            Create a free account to earn gift points, save your wishlist,
+            and track your orders.
+          </p>
+        </div>
+        <div class="cta-banner__actions">
+          <a class="btn btn--primary btn--lg" routerLink="/register">
+            Create Account
+          </a>
+          <a class="btn btn--secondary btn--lg cta-banner__login-btn"
+             routerLink="/login">Sign In</a>
+        </div>
+      </div>
+    </section>
+  }
 
 </main>
