@@ -54,6 +54,26 @@ export class AuthService {
   }
 
   private seedDemoAccount(): void {
+    const homeAddr: DeliveryAddress = {
+      id:        'addr-demo-001',
+      label:     'Home',
+      firstName: 'Demo',
+      lastName:  'User',
+      line1:     '10 Bookshelf Lane',
+      city:      'London',
+      postcode:  'EC1A 1BB',
+      country:   'United Kingdom',
+    };
+    const workAddr: DeliveryAddress = {
+      id:        'addr-demo-002',
+      label:     'Work',
+      firstName: 'Demo',
+      lastName:  'User',
+      line1:     '1 Canary Wharf',
+      city:      'London',
+      postcode:  'E14 5AB',
+      country:   'United Kingdom',
+    };
     const demo: User = {
       id:            'demo-001',
       firstName:     'Demo',
@@ -80,14 +100,8 @@ export class AuthService {
           description: 'Earned on order #ORD-DEMO-002',
         },
       ],
-      savedAddress: {
-        firstName: 'Demo',
-        lastName:  'User',
-        line1:     '10 Bookshelf Lane',
-        city:      'London',
-        postcode:  'EC1A 1BB',
-        country:   'United Kingdom',
-      },
+      savedAddress:   homeAddr,
+      savedAddresses: [homeAddr, workAddr],
       createdAt: '2025-01-01T00:00:00.000Z',
     };
 
@@ -142,6 +156,7 @@ export class AuthService {
           description: 'Welcome bonus',
         },
       ],
+      savedAddresses: [],
       createdAt: new Date().toISOString(),
     };
 
@@ -177,6 +192,19 @@ export class AuthService {
   /** Save a delivery address against the current user */
   saveAddress(address: DeliveryAddress): void {
     this.updateCurrentUser(u => ({ ...u, savedAddress: address }));
+  }
+
+  /**
+   * Persist the full address list for the current user.
+   * Called by AddressService after every mutation.
+   */
+  persistAddresses(addresses: DeliveryAddress[]): void {
+    this.updateCurrentUser(u => ({
+      ...u,
+      savedAddresses: addresses,
+      // keep legacy field in sync with the first (default) address
+      savedAddress: addresses[0] ?? u.savedAddress,
+    }));
   }
 
   /** Append a points transaction to the current user's history */

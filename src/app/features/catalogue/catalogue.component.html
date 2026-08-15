@@ -92,6 +92,12 @@
             Clear all ({{ activeFilterCount() }})
           </button>
         }
+        <button class="filter-panel__clear close-filter" type="button" (click)="toggleFilterPanel()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
       </div>
 
       <!-- Genres -->
@@ -164,6 +170,72 @@
         @if (minRating() > 0) {
           <p class="filter-panel__rating-hint">{{ minRating() }}★ &amp; up</p>
         }
+      </div>
+
+      <!-- Author filter -->
+      <div class="filter-panel__section">
+        <h3 class="filter-panel__section-title">Author</h3>
+
+        <!-- Search-within authors -->
+        <div class="filter-panel__sub-search-wrap">
+          <input
+            class="filter-panel__sub-search"
+            type="search"
+            placeholder="Search authors…"
+            aria-label="Search authors"
+            [value]="authorSearchQuery()"
+            (input)="authorSearchQuery.set($any($event.target).value)"
+            autocomplete="off" />
+        </div>
+
+        <div class="filter-panel__scroll-list" role="list">
+          @for (author of filteredAuthors(); track author) {
+            <button
+              class="filter-panel__list-item"
+              [class.filter-panel__list-item--active]="isAuthorSelected(author)"
+              type="button"
+              (click)="toggleAuthor(author)"
+              [attr.aria-pressed]="isAuthorSelected(author)">
+              {{ author }}
+            </button>
+          }
+          @if (filteredAuthors().length === 0) {
+            <p class="filter-panel__empty-hint">No authors match</p>
+          }
+        </div>
+      </div>
+
+      <!-- Publisher filter -->
+      <div class="filter-panel__section">
+        <h3 class="filter-panel__section-title">Publisher</h3>
+
+        <!-- Search-within publishers -->
+        <div class="filter-panel__sub-search-wrap">
+          <input
+            class="filter-panel__sub-search"
+            type="search"
+            placeholder="Search publishers…"
+            aria-label="Search publishers"
+            [value]="publisherSearchQuery()"
+            (input)="publisherSearchQuery.set($any($event.target).value)"
+            autocomplete="off" />
+        </div>
+
+        <div class="filter-panel__scroll-list" role="list">
+          @for (publisher of filteredPublishers(); track publisher) {
+            <button
+              class="filter-panel__list-item"
+              [class.filter-panel__list-item--active]="isPublisherSelected(publisher)"
+              type="button"
+              (click)="togglePublisher(publisher)"
+              [attr.aria-pressed]="isPublisherSelected(publisher)">
+              {{ publisher }}
+            </button>
+          }
+          @if (filteredPublishers().length === 0) {
+            <p class="filter-panel__empty-hint">No publishers match</p>
+          }
+        </div>
       </div>
 
       <!-- In stock -->
@@ -240,6 +312,18 @@
             <span class="filter-chip" role="listitem">
               {{ genre }}
               <button type="button" (click)="toggleGenre(genre)" [attr.aria-label]="'Remove ' + genre + ' filter'" class="filter-chip__remove">×</button>
+            </span>
+          }
+          @for (author of selectedAuthors(); track author) {
+            <span class="filter-chip" role="listitem">
+              ✍ {{ author }}
+              <button type="button" (click)="toggleAuthor(author)" [attr.aria-label]="'Remove author filter: ' + author" class="filter-chip__remove">×</button>
+            </span>
+          }
+          @for (publisher of selectedPublishers(); track publisher) {
+            <span class="filter-chip" role="listitem">
+              🏢 {{ publisher }}
+              <button type="button" (click)="togglePublisher(publisher)" [attr.aria-label]="'Remove publisher filter: ' + publisher" class="filter-chip__remove">×</button>
             </span>
           }
           @if (minRating() > 0) {

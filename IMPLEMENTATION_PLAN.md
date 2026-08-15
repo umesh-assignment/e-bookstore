@@ -1088,7 +1088,7 @@ The project is divided into 7 sequential phases. Each phase is a self-contained 
 ---
 
 ### Phase 2 — Mock Data, Models & Core Services
-**Status:** `[ ] pending`
+**Status:** `[x] complete`
 
 **Intent:** Create all TypeScript interfaces, mock JSON files, and core services. Establishes the data layer the entire application depends on.
 
@@ -1113,7 +1113,7 @@ The project is divided into 7 sequential phases. Each phase is a self-contained 
 ---
 
 ### Phase 3 — Authentication & Shared UI Components
-**Status:** `[ ] pending`
+**Status:** `[x] complete`
 
 **Intent:** Implement mock auth (register, login, logout, session restoration, auth guard), wire the navbar to auth state, and build all reusable shared UI components.
 
@@ -1144,7 +1144,7 @@ The project is divided into 7 sequential phases. Each phase is a self-contained 
 ---
 
 ### Phase 4 — Catalogue, Book Cards & Book Detail
-**Status:** `[ ] pending`
+**Status:** `[x] complete`
 
 **Intent:** The core browsing experience — catalogue grid with reactive filtering/search/sort/pagination, book cards, and the book detail page with cross-sell sections.
 
@@ -1171,7 +1171,7 @@ The project is divided into 7 sequential phases. Each phase is a self-contained 
 ---
 
 ### Phase 5 — Basket, Wishlist & CartService
-**Status:** `[ ] pending`
+**Status:** `[x] complete`
 
 **Intent:** Implement CartService and WishlistService with signal persistence, basket page, wishlist page, and navbar badge.
 
@@ -1197,7 +1197,7 @@ The project is divided into 7 sequential phases. Each phase is a self-contained 
 ---
 
 ### Phase 6 — Checkout, Payment, Gift Points & Order Confirmation
-**Status:** `[ ] pending`
+**Status:** `[x] complete`
 
 **Intent:** The complete purchase flow — two-step checkout, payment simulation, gift points redemption, order placement, and confirmation.
 
@@ -1223,7 +1223,7 @@ The project is divided into 7 sequential phases. Each phase is a self-contained 
 ---
 
 ### Phase 7 — Order History, Buy Again, Cancellation & Polish
-**Status:** `[ ] pending`
+**Status:** `[x] complete`
 
 **Intent:** Complete post-purchase journeys (order history, buy again, cancellation), account page with points history, and all final polish (responsive testing, accessibility audit, error states, loading states).
 

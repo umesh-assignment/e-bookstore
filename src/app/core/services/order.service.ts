@@ -9,9 +9,11 @@ import { GiftPointsService } from './gift-points.service';
 import { BookService } from './book.service';
 import { ToastService } from './toast.service';
 
-const STORAGE_KEY       = 'ebk_orders';
-const LAST_ORDER_KEY    = 'ebk_last_order';
-const ORDER_DELAY_MS    = 1500;
+const STORAGE_KEY            = 'ebk_orders';
+const LAST_ORDER_KEY         = 'ebk_last_order';
+const ORDER_DELAY_MS         = 1500;
+/** 48 hours expressed in milliseconds */
+const CANCELLATION_WINDOW_MS = 48 * 60 * 60 * 1000;
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -45,6 +47,8 @@ export class OrderService {
     if (demoOrdersExist) return;
 
     const demoAddress = {
+      id:        'addr-demo-001',
+      label:     'Home',
       firstName: 'Demo',
       lastName:  'User',
       line1:     '10 Bookshelf Lane',
@@ -69,7 +73,8 @@ export class OrderService {
         pointsEarned:     300,
         pointsRedeemed:   0,
         status:           'Processing',
-        createdAt:        new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        // 1 hour ago — clearly within the 48-hour cancellation window for demo
+        createdAt:        new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
         estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
       },
       {
@@ -174,9 +179,36 @@ export class OrderService {
 
   // ── Cancel ────────────────────────────────────────────────────────────────
 
-  cancelOrder(orderId: string): void {
+  /**
+   * Determines whether an order is eligible for cancellation.
+   *
+   * Rules:
+   *  - Status must be 'Processing' (Delivered and Cancelled are final)
+   *  - Order must have been placed within the last 48 hours
+   */
+  isCancellationAllowed(order: Order): boolean {
+    if (order.status !== 'Processing') return false;
+    const ageMs = Date.now() - new Date(order.createdAt).getTime();
+    return ageMs <= CANCELLATION_WINDOW_MS;
+  }
+
+  /**
+   * Returns the deadline timestamp by which cancellation is still allowed,
+   * or null if the order is not in a cancellable status.
+   */
+  cancellationDeadline(order: Order): Date | null {
+    if (order.status !== 'Processing') return null;
+    return new Date(new Date(order.createdAt).getTime() + CANCELLATION_WINDOW_MS);
+  }
+
+  /**
+   * Cancel an order if it is still within the 48-hour window.
+   * Silently no-ops when the order is not eligible.
+   * Returns true if the cancellation was applied, false otherwise.
+   */
+  cancelOrder(orderId: string): boolean {
     const order = this.getOrderById(orderId);
-    if (!order || order.status !== 'Processing') return;
+    if (!order || !this.isCancellationAllowed(order)) return false;
 
     // Update status reactively
     this._orders.update(orders =>
@@ -186,6 +218,9 @@ export class OrderService {
     // Reverse points
     this.points.reverseEarnedPoints(orderId);
     this.points.refundRedeemedPoints(orderId);
+
+    this.toastSvc.success('Your order has been cancelled. Any points will be refunded shortly.');
+    return true;
   }
 
   // ── Buy Again ─────────────────────────────────────────────────────────────

@@ -68,7 +68,7 @@
               <li class="item-card" role="listitem">
 
                 <!-- Cover -->
-                <a class="item-card__cover-link" [routerLink]="['/catalogue', item.bookId]" [attr.aria-label]="'View ' + item.title">
+                <a class="item-card__cover-link" [routerLink]="['/product', item.bookId]" [attr.aria-label]="'View ' + item.title">
                   <img
                     class="item-card__cover"
                     [src]="item.coverUrl"
@@ -79,7 +79,7 @@
 
                 <!-- Details -->
                 <div class="item-card__details">
-                  <a class="item-card__title" [routerLink]="['/catalogue', item.bookId]">{{ item.title }}</a>
+                  <a class="item-card__title" [routerLink]="['/product', item.bookId]">{{ item.title }}</a>
                   <p class="item-card__author">{{ item.author }}</p>
                   <p class="item-card__unit-price">£{{ item.price.toFixed(2) }} each</p>
 
@@ -129,6 +129,12 @@
               <dt>Subtotal ({{ cartSvc.totalItems() }} item{{ cartSvc.totalItems() === 1 ? '' : 's' }})</dt>
               <dd>£{{ cartSvc.subtotal().toFixed(2) }}</dd>
             </div>
+            @if (cartSvc.discount() > 0) {
+              <div class="order-summary__row order-summary__row--saving">
+                <dt>Discount</dt>
+                <dd class="order-summary__saving">−£{{ cartSvc.discount().toFixed(2) }}</dd>
+              </div>
+            }
             <div class="order-summary__row">
               <dt>Delivery</dt>
               <dd>
@@ -147,6 +153,22 @@
           </div>
 
           <p class="order-summary__vat">Includes VAT where applicable</p>
+
+          <!-- Points earn preview -->
+          @if (isLoggedIn() && earnPreview() > 0) {
+            <div class="order-summary__points-earn" aria-live="polite">
+              <span class="order-summary__points-earn-icon" aria-hidden="true">🎁</span>
+              <span>Earn <strong>{{ earnPreview() }} pts</strong> on this order</span>
+            </div>
+          }
+
+          <!-- Redeem hint for logged-in users with balance -->
+          @if (isLoggedIn() && pointsBalance() > 0) {
+            <div class="order-summary__points-hint">
+              You have <strong>{{ pointsBalance() }} pts</strong>
+              (≈ £{{ pointsInGBP().toFixed(2) }}) to redeem at checkout.
+            </div>
+          }
 
           <a
             class="btn btn--primary order-summary__checkout"

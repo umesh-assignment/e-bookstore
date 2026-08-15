@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, computed } from '@angular/core';
 import { PointsTransaction } from '@core/models';
 import { AuthService } from './auth.service';
 
@@ -11,15 +11,23 @@ const REDEEM_RATE = 100;
 export class GiftPointsService {
   private readonly auth = inject(AuthService);
 
-  // ── Read helpers ──────────────────────────────────────────────────────────
+  // ── Reactive signals ──────────────────────────────────────────────────────
+
+  /** Current points balance as a reactive signal */
+  readonly balance = computed(() => this.auth.currentUser()?.giftPoints ?? 0);
+
+  /** Points balance expressed as a GBP discount value */
+  readonly balanceInGBP = computed(() => this.balance() / REDEEM_RATE);
+
+  // ── Read helpers (kept for backwards-compat) ──────────────────────────────
 
   getBalance(): number {
-    return this.auth.currentUser()?.giftPoints ?? 0;
+    return this.balance();
   }
 
   /** Convert points balance to GBP equivalent */
   getBalanceInGBP(): number {
-    return this.getBalance() / REDEEM_RATE;
+    return this.balanceInGBP();
   }
 
   /** Convert a GBP discount amount to required points */
@@ -30,6 +38,11 @@ export class GiftPointsService {
   /** Convert points to GBP discount */
   pointsToGBP(points: number): number {
     return points / REDEEM_RATE;
+  }
+
+  /** Max points redeemable against a given order total (pts, not GBP) */
+  maxRedeemable(orderTotal: number): number {
+    return Math.min(this.balance(), this.gbpToPoints(orderTotal));
   }
 
   // ── Mutations ─────────────────────────────────────────────────────────────

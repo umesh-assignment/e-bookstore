@@ -28,6 +28,17 @@ export class CartService {
     this._items().reduce((sum, item) => sum + item.price * item.quantity, 0)
   );
 
+  /**
+   * Total savings: sum of (originalPrice - price) × qty for items that have a
+   * higher originalPrice. Zero when no discounts apply.
+   */
+  readonly discount = computed(() =>
+    this._items().reduce((sum, item) => {
+      if (!item.originalPrice || item.originalPrice <= item.price) return sum;
+      return sum + (item.originalPrice - item.price) * item.quantity;
+    }, 0)
+  );
+
   readonly deliveryFee = computed(() =>
     this.subtotal() >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE
   );
@@ -58,12 +69,13 @@ export class CartService {
         );
       }
       const newItem: CartItem = {
-        bookId:   book.id,
-        title:    book.title,
-        author:   book.author,
-        coverUrl: book.coverUrl,
-        price:    book.price,
-        quantity: Math.min(MAX_QUANTITY, qty),
+        bookId:        book.id,
+        title:         book.title,
+        author:        book.author,
+        coverUrl:      book.coverUrl,
+        price:         book.price,
+        originalPrice: book.originalPrice ?? null,
+        quantity:      Math.min(MAX_QUANTITY, qty),
       };
       return [...items, newItem];
     });
@@ -90,6 +102,36 @@ export class CartService {
     this._items.update(items =>
       items.map(i => i.bookId === bookId ? { ...i, quantity: clamped } : i)
     );
+  }
+
+  /**
+   * Increment quantity by 1 (capped at MAX_QUANTITY).
+   */
+  incrementQty(bookId: string): void {
+    this._items.update(items =>
+      items.map(i =>
+        i.bookId === bookId
+          ? { ...i, quantity: Math.min(MAX_QUANTITY, i.quantity + 1) }
+          : i
+      )
+    );
+  }
+
+  /**
+   * Decrement quantity by 1. Removes the item when it would reach zero.
+   */
+  decrementQty(bookId: string): void {
+    const item = this._items().find(i => i.bookId === bookId);
+    if (!item) return;
+    if (item.quantity <= 1) {
+      this.removeItem(bookId);
+    } else {
+      this._items.update(items =>
+        items.map(i =>
+          i.bookId === bookId ? { ...i, quantity: i.quantity - 1 } : i
+        )
+      );
+    }
   }
 
   /**

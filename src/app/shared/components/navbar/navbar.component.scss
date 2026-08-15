@@ -13,7 +13,9 @@
     display: flex;
     align-items: center;
     height: 100%;
-    gap: var(--space-3);
+    gap: var(--space-2);
+
+    @media (min-width: 640px) { gap: var(--space-3); }
   }
 
   // ── Brand ────────────────────────────────────────────────────────────────
@@ -130,13 +132,19 @@
   }
 
   // ── Right actions ────────────────────────────────────────────────────────
+  // Always visible — basket icon must be reachable on every viewport.
+  // Individual items inside control their own desktop-only visibility.
   &__actions {
-    display: none;
+    display: flex;
     align-items: center;
     gap: var(--space-1);
     margin-left: auto;
     flex-shrink: 0;
-    @media (min-width: 640px) { display: flex; }
+  }
+
+  // Search toggle: hidden below 640px (mobile search bar handles it)
+  &__search-toggle-mobile-hide {
+    @media (max-width: 639px) { display: none; }
   }
 
   &__action-btn {
@@ -265,7 +273,7 @@
   // ── Hamburger (mobile only) ───────────────────────────────────────────────
   &__hamburger {
     display: flex;
-    margin-left: auto;
+    // No margin-left: auto here — actions already push right via own margin-left: auto
     color: #fff;
     background: transparent;
     border: none;

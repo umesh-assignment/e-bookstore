@@ -27,9 +27,15 @@
       (confirmed)="confirmCancel()"
       (dismissed)="closeCancelModal()">
       <p>Are you sure you want to cancel order <strong>#{{ o.id.slice(-8).toUpperCase() }}</strong>?</p>
-      <p style="color: var(--color-muted); font-size: 14px;">
-        Any points earned or redeemed on this order will be reversed.
+      <p class="cancel-modal__note">
+        Any gift points earned or redeemed on this order will be reversed.
       </p>
+      @if (cancelDeadline()) {
+        <p class="cancel-modal__deadline">
+          Cancellation window closes:
+          <strong>{{ cancelDeadline() | date: 'EEE d MMM yyyy, HH:mm' }}</strong>
+        </p>
+      }
     </app-modal>
 
     <section class="order-detail-header">
@@ -72,7 +78,7 @@
               <li class="order-item" role="listitem">
                 <img class="order-item__cover" [src]="item.coverUrl" [alt]="item.title" loading="lazy" />
                 <div class="order-item__info">
-                  <a class="order-item__title" [routerLink]="['/catalogue', item.bookId]">{{ item.title }}</a>
+                  <a class="order-item__title" [routerLink]="['/product', item.bookId]">{{ item.title }}</a>
                   <p class="order-item__author">{{ item.author }}</p>
                   <p class="order-item__qty">Qty: {{ item.quantity }}</p>
                 </div>
@@ -113,15 +119,36 @@
           </dl>
         </div>
 
-        <!-- Cancel button (Processing only) -->
+        <!-- Cancel action area — Processing orders only -->
         @if (o.status === 'Processing') {
-          <button
-            class="btn order-detail-cancel"
-            type="button"
-            (click)="openCancelModal()"
-            aria-label="Cancel this order">
-            Cancel Order
-          </button>
+          @if (cancellable()) {
+            <!-- Within 48-hour window: show active cancel button -->
+            <div class="order-cancel-wrap">
+              <button
+                class="btn order-detail-cancel"
+                type="button"
+                (click)="openCancelModal()"
+                aria-label="Cancel this order">
+                Cancel Order
+              </button>
+              <p class="order-cancel-deadline">
+                Free cancellation until
+                <strong>{{ cancelDeadline() | date: 'EEE d MMM, HH:mm' }}</strong>
+              </p>
+            </div>
+          } @else {
+            <!-- Past 48 hours: show informational notice, no action -->
+            <div class="order-cancel-expired" role="status" aria-live="polite">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              Cancellation window has expired.
+              Orders can only be cancelled within 48 hours of placement.
+            </div>
+          }
         }
 
       </div><!-- /order-detail-main -->
@@ -154,14 +181,32 @@
         <div class="order-detail-card order-detail-card--sm">
           <h2 class="order-detail-card__title">Payment</h2>
           <p class="order-payment-method">
-            @if (o.payment.method === 'card') {
-              💳 Card ending {{ o.payment.last4 }}
-            } @else if (o.payment.method === 'points') {
-              🎁 Paid with gift points
-            } @else {
-              💳 Card ending {{ o.payment.last4 }} + 🎁 {{ o.payment.pointsUsed }} pts
+            @switch (o.payment.method) {
+              @case ('card') {
+                💳 Card ending {{ o.payment.last4 }}
+              }
+              @case ('mixed') {
+                💳 Card ending {{ o.payment.last4 }} + 🎁 {{ o.payment.pointsUsed }} pts
+              }
+              @case ('points') {
+                🎁 Paid with gift points
+              }
+              @case ('upi') {
+                📱 UPI — {{ o.payment.upiId }}
+              }
+              @case ('netbanking') {
+                🏦 Net Banking — {{ o.payment.bankName }}
+              }
+              @case ('cod') {
+                💵 Cash on Delivery
+              }
             }
           </p>
+          @if (o.payment.method === 'cod') {
+            <p class="order-cod-note">
+              Please have <strong>£{{ o.total.toFixed(2) }}</strong> ready for the delivery agent.
+            </p>
+          }
           @if (o.pointsEarned > 0) {
             <p class="order-points-earned">+{{ o.pointsEarned }} pts earned</p>
           }

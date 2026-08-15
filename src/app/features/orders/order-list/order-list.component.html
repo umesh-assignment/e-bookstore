@@ -59,6 +59,16 @@
               }
             </div>
 
+            <div class="order-card__delivery">
+              @if (order.status === 'Delivered') {
+                <span class="order-card__delivery--done">✅ Delivered</span>
+              } @else if (order.status === 'Cancelled') {
+                <span class="order-card__delivery--cancelled">❌ Cancelled</span>
+              } @else {
+                <span>📦 Est. delivery: <strong>{{ order.estimatedDelivery | date: 'EEE d MMM yyyy' }}</strong></span>
+              }
+            </div>
+
             <div class="order-card__footer">
               <span class="order-card__total">£{{ order.total.toFixed(2) }}</span>
               <a class="btn btn--secondary order-card__view-btn" [routerLink]="['/orders', order.id]">

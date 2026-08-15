@@ -4,26 +4,13 @@
     <!-- ── Brand ─────────────────────────────────────────────────────── -->
     <a class="navbar__brand" routerLink="/" aria-label="e-Bookstore home"
        (click)="closeMobileMenu()">
-      <svg class="navbar__logo-icon" width="28" height="28" viewBox="0 0 28 28"
-           fill="none" aria-hidden="true">
-        <rect width="28" height="28" rx="6" fill="currentColor"/>
-        <path d="M7 8h8a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7V8z" fill="white" opacity="0.9"/>
-        <path d="M15 8h2a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-2V8z" fill="white" opacity="0.5"/>
-        <path d="M8 11h6M8 13.5h6M8 16h4" stroke="#1A3A5C" stroke-width="1.2"
-              stroke-linecap="round"/>
-      </svg>
       <span class="navbar__brand-text">e-Bookstore</span>
     </a>
 
     <!-- ── Desktop Nav Links ──────────────────────────────────────────── -->
     <ul class="navbar__links" role="list">
       <li>
-        <a class="navbar__link" routerLink="/" routerLinkActive="navbar__link--active"
-           [routerLinkActiveOptions]="{ exact: true }">Home</a>
-      </li>
-      <li>
-        <a class="navbar__link" routerLink="/catalogue"
-           routerLinkActive="navbar__link--active">Browse</a>
+        <a class="navbar__link" routerLink="/catalogue" routerLinkActive="navbar__link--active">Browse</a>
       </li>
       @if (isLoggedIn()) {
         <li>
@@ -65,8 +52,8 @@
     <!-- ── Right Actions ─────────────────────────────────────────────── -->
     <div class="navbar__actions">
 
-      <!-- Search toggle -->
-      <button class="btn-icon navbar__action-btn" type="button"
+      <!-- Search toggle (hidden on mobile — mobile search bar handles it) -->
+      <button class="btn-icon navbar__action-btn navbar__search-toggle-mobile-hide" type="button"
               (click)="toggleSearch()"
               [attr.aria-expanded]="searchOpen"
               aria-label="Toggle search">

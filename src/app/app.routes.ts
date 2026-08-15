@@ -22,6 +22,12 @@ export const routes: Routes = [
     title: 'Book Details — e-Bookstore'
   },
   {
+    path: 'product/:id',
+    loadComponent: () =>
+      import('./features/book-detail/book-detail.component').then(m => m.BookDetailComponent),
+    title: 'Book Details — e-Bookstore'
+  },
+  {
     path: 'basket',
     loadComponent: () =>
       import('./features/basket/basket.component').then(m => m.BasketComponent),

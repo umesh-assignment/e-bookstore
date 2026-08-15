@@ -1,6 +1,6 @@
 import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe }   from '@angular/common';
 import { OrderService }  from '@core/services/order.service';
 import { AuthService }   from '@core/services/auth.service';
 import { BadgeComponent } from '@shared/components/badge/badge.component';

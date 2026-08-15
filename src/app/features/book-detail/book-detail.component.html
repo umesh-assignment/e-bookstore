@@ -81,7 +81,11 @@
             </div>
 
             <h1 class="book-hero__title">{{ b.title }}</h1>
-            <p class="book-hero__author">by <strong>{{ b.author }}</strong></p>
+            <p class="book-hero__author">by
+              <a class="book-hero__author-link"
+                 [routerLink]="['/catalogue']"
+                 [queryParams]="{ author: b.author }">{{ b.author }}</a>
+            </p>
 
             <!-- Rating -->
             <div class="book-hero__rating">
@@ -146,7 +150,11 @@
 
             <!-- Trust bar -->
             <ul class="book-hero__trust" aria-label="Delivery and returns">
-              <li>🚚 Free delivery on orders over £20</li>
+              @if (b.inStock && deliveryDate()) {
+                <li>🚚 Estimated delivery: <strong>{{ deliveryDate() }}</strong></li>
+              } @else {
+                <li>🚚 Free delivery on orders over £20</li>
+              }
               <li>↩ Free 30-day returns</li>
               <li>🔒 Secure checkout</li>
             </ul>
@@ -186,7 +194,11 @@
               </div>
               <div class="book-meta__row">
                 <dt>Publisher</dt>
-                <dd>{{ b.publisher }}</dd>
+                <dd>
+                  <a [routerLink]="['/catalogue']"
+                     [queryParams]="{ publisher: b.publisher }"
+                     class="book-meta__link">{{ b.publisher }}</a>
+                </dd>
               </div>
               <div class="book-meta__row">
                 <dt>Published</dt>
@@ -199,6 +211,14 @@
               <div class="book-meta__row">
                 <dt>Language</dt>
                 <dd>{{ b.language }}</dd>
+              </div>
+              <div class="book-meta__row">
+                <dt>Author</dt>
+                <dd>
+                  <a [routerLink]="['/catalogue']"
+                     [queryParams]="{ author: b.author }"
+                     class="book-meta__link">{{ b.author }}</a>
+                </dd>
               </div>
               <div class="book-meta__row">
                 <dt>Genre</dt>

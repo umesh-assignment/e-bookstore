@@ -1,4 +1,6 @@
 export interface DeliveryAddress {
+  id: string;
+  label?: string;       // e.g. "Home", "Work"
   firstName: string;
   lastName: string;
   line1: string;
@@ -29,6 +31,9 @@ export interface User {
   passwordHash: string;
   giftPoints: number;
   pointsHistory: PointsTransaction[];
+  /** Legacy single address — kept for backwards-compat with existing localStorage data */
   savedAddress?: DeliveryAddress;
+  /** Address book — list of saved delivery addresses */
+  savedAddresses: DeliveryAddress[];
   createdAt: string;
 }

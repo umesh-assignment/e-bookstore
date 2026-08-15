@@ -87,12 +87,37 @@ export class BookDetailComponent {
     return Math.round((1 - b.price / b.originalPrice) * 100);
   });
 
+  // ── Tentative delivery date (3–5 business days from today) ────────────────
+  /**
+   * Returns a formatted delivery window such as "Mon 18 Aug – Wed 20 Aug".
+   * Skips weekends when counting forward. Only shown for in-stock books.
+   */
+  readonly deliveryDate = computed<string>(() => {
+    const b = this.book();
+    if (!b?.inStock) return '';
+    return `${this._addBusinessDays(3)} – ${this._addBusinessDays(5)}`;
+  });
+
+  private _addBusinessDays(days: number): string {
+    const DAY_NAMES  = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const date = new Date();
+    let added = 0;
+    while (added < days) {
+      date.setDate(date.getDate() + 1);
+      const dow = date.getDay();
+      if (dow !== 0 && dow !== 6) added++; // skip Sun(0) and Sat(6)
+    }
+    return `${DAY_NAMES[date.getDay()]} ${date.getDate()} ${MONTH_NAMES[date.getMonth()]}`;
+  }
+
   // ── Breadcrumbs ────────────────────────────────────────────────────────────
   readonly breadcrumbs = computed<Breadcrumb[]>(() => {
     const b = this.book();
     return [
-      { label: 'Home',          path: '/' },
-      { label: 'Browse Books',  path: '/catalogue' },
+      { label: 'Home',         path: '/' },
+      { label: 'Browse Books', path: '/catalogue' },
       { label: b?.title ?? 'Book Details' },
     ];
   });
@@ -133,7 +158,7 @@ export class BookDetailComponent {
     const b = this.book();
     if (!b) return;
     if (!this.authSvc.isLoggedIn()) {
-      this.router.navigate(['/login'], { queryParams: { returnUrl: `/catalogue/${b.id}` } });
+      this.router.navigate(['/login'], { queryParams: { returnUrl: `/product/${b.id}` } });
       return;
     }
     this.wishSvc.toggle(b.id);

@@ -95,9 +95,40 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════
+       PERSONALISED RECOMMENDATIONS  (logged-in + history)
+  ════════════════════════════════════════════════════ -->
+  @if (hasPersonalised()) {
+    <section class="home-section" aria-labelledby="rec-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header__title-block">
+            <h2 class="section-header__title" id="rec-heading">Recommended for You</h2>
+            @if (personalisedReason()) {
+              <p class="section-header__reason">{{ personalisedReason() }}</p>
+            }
+          </div>
+          <a class="section-header__link" routerLink="/catalogue">Explore more →</a>
+        </div>
+
+        @if (isLoading()) {
+          <div class="book-grid">
+            <app-skeleton-card [count]="4" />
+          </div>
+        } @else {
+          <div class="book-grid">
+            @for (book of personalised().slice(0, 4); track book.id) {
+              <app-book-card [book]="book" />
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- ════════════════════════════════════════════════════
        FEATURED BOOKS
   ════════════════════════════════════════════════════ -->
-  <section class="home-section" aria-labelledby="featured-heading">
+  <section class="home-section home-section--light" aria-labelledby="featured-heading">
     <div class="container">
       <div class="section-header">
         <h2 class="section-header__title" id="featured-heading">Featured Books</h2>
@@ -137,7 +168,7 @@
   <!-- ════════════════════════════════════════════════════
        NEW ARRIVALS
   ════════════════════════════════════════════════════ -->
-  <section class="home-section home-section--light" aria-labelledby="arrivals-heading">
+  <section class="home-section" aria-labelledby="arrivals-heading">
     <div class="container">
       <div class="section-header">
         <h2 class="section-header__title" id="arrivals-heading">
@@ -165,23 +196,26 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════
-       TOP RATED
+       TRENDING  (new arrivals + high rating)
   ════════════════════════════════════════════════════ -->
-  <section class="home-section" aria-labelledby="toprated-heading">
+  <section class="home-section home-section--light" aria-labelledby="trending-heading">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-header__title" id="toprated-heading">Top Rated</h2>
+        <h2 class="section-header__title" id="trending-heading">
+          Trending Now
+          <app-badge label="Hot" variant="danger" [pill]="true" />
+        </h2>
         <a class="section-header__link" routerLink="/catalogue"
            [queryParams]="{ sort: 'rating' }">See all →</a>
       </div>
 
       @if (isLoading()) {
-        <div class="book-grid">
+        <div class="scroll-row">
           <app-skeleton-card [count]="4" />
         </div>
       } @else {
         <div class="scroll-row" role="list">
-          @for (book of topRated(); track book.id) {
+          @for (book of trending(); track book.id) {
             <div class="scroll-row__item" role="listitem">
               <app-book-card [book]="book" [compact]="true" />
             </div>
@@ -192,36 +226,22 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════
-       RECOMMENDED FOR YOU
+       POPULAR BOOKS  (top by review count)
   ════════════════════════════════════════════════════ -->
-  <section class="home-section home-section--light" aria-labelledby="rec-heading">
+  <section class="home-section" aria-labelledby="popular-heading">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-header__title" id="rec-heading">
-          @if (isLoggedIn()) {
-            Recommended for You
-          } @else {
-            Staff Picks
-          }
-        </h2>
-        <a class="section-header__link" routerLink="/catalogue">Explore more →</a>
+        <h2 class="section-header__title" id="popular-heading">Most Popular</h2>
+        <a class="section-header__link" routerLink="/catalogue">See all →</a>
       </div>
 
       @if (isLoading()) {
         <div class="book-grid">
           <app-skeleton-card [count]="4" />
         </div>
-      } @else if (recommendations().length === 0) {
-        <app-empty-state
-          title="No recommendations yet"
-          message="Browse some books and we'll personalise your picks."
-          ctaLabel="Browse Books"
-          ctaLink="/catalogue"
-          icon="book"
-        />
       } @else {
         <div class="book-grid">
-          @for (book of recommendations().slice(0, 4); track book.id) {
+          @for (book of popular().slice(0, 4); track book.id) {
             <app-book-card [book]="book" />
           }
         </div>
@@ -233,7 +253,7 @@
        RECENTLY PURCHASED  (logged-in only)
   ════════════════════════════════════════════════════ -->
   @if (isLoggedIn() && recentlyPurchasedBooks().length > 0) {
-    <section class="home-section" aria-labelledby="recent-heading">
+    <section class="home-section home-section--light" aria-labelledby="recent-heading">
       <div class="container">
         <div class="section-header">
           <h2 class="section-header__title" id="recent-heading">
@@ -242,14 +262,47 @@
           <a class="section-header__link" routerLink="/orders">View orders →</a>
         </div>
         <div class="scroll-row" role="list">
-          @for (book of recentlyPurchasedBooks(); track book?.id) {
-            @if (book) {
-              <div class="scroll-row__item" role="listitem">
-                <app-book-card [book]="book" [compact]="true" />
-              </div>
-            }
+          @for (book of recentlyPurchasedBooks(); track book.id) {
+            <div class="scroll-row__item" role="listitem">
+              <app-book-card [book]="book" [compact]="true" />
+            </div>
           }
         </div>
+      </div>
+    </section>
+  }
+
+  <!-- ════════════════════════════════════════════════════
+       STAFF PICKS  (guests without history only)
+  ════════════════════════════════════════════════════ -->
+  @if (!hasPersonalised()) {
+    <section class="home-section" [class.home-section--light]="isLoggedIn()"
+             aria-labelledby="staff-heading">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header__title-block">
+            <h2 class="section-header__title" id="staff-heading">Staff Picks</h2>
+            @if (!isLoggedIn()) {
+              <p class="section-header__reason">
+                Sign in to get personalised recommendations based on your reading history.
+              </p>
+            }
+          </div>
+          <a class="section-header__link" routerLink="/catalogue">Explore more →</a>
+        </div>
+
+        @if (isLoading()) {
+          <div class="book-grid">
+            <app-skeleton-card [count]="4" />
+          </div>
+        } @else {
+          <!-- Show top-4 popular books as curated staff picks -->
+          <div class="book-grid">
+            @for (book of popular().slice(0, 4); track book.id) {
+              <app-book-card [book]="book" />
+            }
+          </div>
+        }
       </div>
     </section>
   }
@@ -266,7 +319,7 @@
           </h2>
           <p class="cta-banner__subtitle">
             Create a free account to earn gift points, save your wishlist,
-            and track your orders.
+            and get personalised recommendations tailored to your reading tastes.
           </p>
         </div>
         <div class="cta-banner__actions">

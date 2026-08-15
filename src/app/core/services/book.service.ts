@@ -42,6 +42,16 @@ export class BookService {
     }))
   );
 
+  /** Sorted unique author names derived from the loaded book list. */
+  readonly uniqueAuthors = computed(() =>
+    [...new Set(this._books().map(b => b.author))].sort((a, b) => a.localeCompare(b))
+  );
+
+  /** Sorted unique publisher names derived from the loaded book list. */
+  readonly uniquePublishers = computed(() =>
+    [...new Set(this._books().map(b => b.publisher))].sort((a, b) => a.localeCompare(b))
+  );
+
   constructor() {
     this.loadBooks();
     this.loadCategories();
@@ -114,6 +124,8 @@ export class BookService {
   filter(criteria: {
     query?: string;
     genres?: string[];
+    authors?: string[];
+    publishers?: string[];
     minPrice?: number;
     maxPrice?: number;
     minRating?: number;
@@ -133,6 +145,14 @@ export class BookService {
 
     if (criteria.genres?.length) {
       result = result.filter(b => criteria.genres!.includes(b.genre));
+    }
+
+    if (criteria.authors?.length) {
+      result = result.filter(b => criteria.authors!.includes(b.author));
+    }
+
+    if (criteria.publishers?.length) {
+      result = result.filter(b => criteria.publishers!.includes(b.publisher));
     }
 
     if (criteria.minPrice !== undefined) {

@@ -12,8 +12,13 @@ export interface OrderItem {
 }
 
 export interface PaymentSummary {
-  method: 'card' | 'points' | 'mixed';
+  method: 'card' | 'upi' | 'netbanking' | 'cod' | 'points' | 'mixed';
+  /** Last 4 digits of card (card / mixed only) */
   last4?: string;
+  /** UPI virtual payment address */
+  upiId?: string;
+  /** Selected bank name (netbanking only) */
+  bankName?: string;
   pointsUsed?: number;
   amountFromCard?: number;
 }

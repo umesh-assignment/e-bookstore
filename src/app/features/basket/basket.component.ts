@@ -1,9 +1,10 @@
 import { Component, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CartService }    from '@core/services/cart.service';
-import { WishlistService } from '@core/services/wishlist.service';
-import { AuthService }    from '@core/services/auth.service';
-import { BookService }    from '@core/services/book.service';
+import { CartService }         from '@core/services/cart.service';
+import { WishlistService }     from '@core/services/wishlist.service';
+import { AuthService }         from '@core/services/auth.service';
+import { BookService }         from '@core/services/book.service';
+import { GiftPointsService }   from '@core/services/gift-points.service';
 import { BookCardComponent }   from '@shared/components/book-card/book-card.component';
 import { EmptyStateComponent } from '@shared/components/empty-state/empty-state.component';
 import { BreadcrumbComponent, Breadcrumb } from '@shared/components/breadcrumb/breadcrumb.component';
@@ -23,12 +24,20 @@ import { QuantitySelectorComponent } from '@shared/components/quantity-selector/
   styleUrl:    './basket.component.scss',
 })
 export class BasketComponent {
-  readonly cartSvc    = inject(CartService);
-  readonly wishSvc    = inject(WishlistService);
-  private readonly authSvc   = inject(AuthService);
-  private readonly bookSvc   = inject(BookService);
+  readonly cartSvc              = inject(CartService);
+  readonly wishSvc              = inject(WishlistService);
+  private readonly authSvc      = inject(AuthService);
+  private readonly bookSvc      = inject(BookService);
+  private readonly pointsSvc    = inject(GiftPointsService);
 
-  readonly isLoggedIn = this.authSvc.isLoggedIn;
+  readonly isLoggedIn           = this.authSvc.isLoggedIn;
+  readonly pointsBalance        = this.pointsSvc.balance;
+  readonly pointsInGBP          = this.pointsSvc.balanceInGBP;
+
+  /** Points the customer will earn on this order (10 pts per £1 of total paid) */
+  readonly earnPreview = computed(() =>
+    Math.floor(this.cartSvc.total()) * 10
+  );
 
   readonly breadcrumbs: Breadcrumb[] = [
     { label: 'Home',   path: '/' },

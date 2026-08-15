@@ -52,28 +52,54 @@ export class CatalogueComponent implements OnDestroy {
   );
 
   // ── Filter signals ─────────────────────────────────────────────────────────
-  readonly selectedGenres = signal<string[]>([]);
-  readonly minPrice       = signal<number>(0);
-  readonly maxPrice       = signal<number>(999);
-  readonly minRating      = signal<number>(0);
-  readonly inStockOnly    = signal(false);
-  readonly sortBy         = signal<SortKey>('newest');
-  readonly currentPage    = signal(1);
-  readonly filterPanelOpen = signal(false);
+  readonly selectedGenres     = signal<string[]>([]);
+  readonly selectedAuthors    = signal<string[]>([]);
+  readonly selectedPublishers = signal<string[]>([]);
+  readonly minPrice           = signal<number>(0);
+  readonly maxPrice           = signal<number>(999);
+  readonly minRating          = signal<number>(0);
+  readonly inStockOnly        = signal(false);
+  readonly sortBy             = signal<SortKey>('newest');
+  readonly currentPage        = signal(1);
+  readonly filterPanelOpen    = signal(false);
+
+  // ── Author / publisher search-within (signals so computed() tracks them) ──
+  readonly authorSearchQuery    = signal('');
+  readonly publisherSearchQuery = signal('');
 
   // ── Service aliases ────────────────────────────────────────────────────────
-  readonly isLoading  = this.bookSvc.isLoading;
-  readonly loadError  = this.bookSvc.loadError;
-  readonly categories = this.bookSvc.categoriesWithCount;
+  readonly isLoading        = this.bookSvc.isLoading;
+  readonly loadError        = this.bookSvc.loadError;
+  readonly categories       = this.bookSvc.categoriesWithCount;
+  readonly uniqueAuthors    = this.bookSvc.uniqueAuthors;
+  readonly uniquePublishers = this.bookSvc.uniquePublishers;
 
   // ── Computed ───────────────────────────────────────────────────────────────
   readonly priceRange = computed(() => this.bookSvc.getPriceRange());
 
+  /** Authors filtered by the in-panel search input */
+  readonly filteredAuthors = computed(() => {
+    const q = this.authorSearchQuery().toLowerCase().trim();
+    return q
+      ? this.uniqueAuthors().filter(a => a.toLowerCase().includes(q))
+      : this.uniqueAuthors();
+  });
+
+  /** Publishers filtered by the in-panel search input */
+  readonly filteredPublishers = computed(() => {
+    const q = this.publisherSearchQuery().toLowerCase().trim();
+    return q
+      ? this.uniquePublishers().filter(p => p.toLowerCase().includes(q))
+      : this.uniquePublishers();
+  });
+
   readonly activeFilterCount = computed(() => {
     let n = 0;
-    if (this.selectedGenres().length) n++;
-    if (this.inStockOnly()) n++;
-    if (this.minRating() > 0) n++;
+    if (this.selectedGenres().length)     n++;
+    if (this.selectedAuthors().length)    n++;
+    if (this.selectedPublishers().length) n++;
+    if (this.inStockOnly())               n++;
+    if (this.minRating() > 0)             n++;
     const range = this.priceRange();
     if (this.minPrice() > range.min || this.maxPrice() < range.max) n++;
     return n;
@@ -82,7 +108,9 @@ export class CatalogueComponent implements OnDestroy {
   readonly filteredBooks = computed(() => {
     const filtered = this.bookSvc.filter({
       query:       this.debouncedQuery(),
-      genres:      this.selectedGenres().length ? this.selectedGenres() : undefined,
+      genres:      this.selectedGenres().length     ? this.selectedGenres()     : undefined,
+      authors:     this.selectedAuthors().length    ? this.selectedAuthors()    : undefined,
+      publishers:  this.selectedPublishers().length ? this.selectedPublishers() : undefined,
       minPrice:    this.minPrice(),
       maxPrice:    this.maxPrice(),
       minRating:   this.minRating() || undefined,
@@ -110,20 +138,29 @@ export class CatalogueComponent implements OnDestroy {
 
   // ── Constructor: URL param sync, page reset ────────────────────────────────
   constructor() {
-    // Pre-populate from URL query params (?q=, ?genre=)
+    // Pre-populate from URL query params (?q=, ?genre=, ?author=, ?publisher=)
     const queryParams = toSignal(this.route.queryParamMap, { initialValue: null });
 
     effect(() => {
       const params = queryParams();
       if (!params) return;
-      const q     = params.get('q') ?? '';
-      const genre = params.get('genre') ?? '';
+      const q         = params.get('q')         ?? '';
+      const genre     = params.get('genre')     ?? '';
+      const author    = params.get('author')    ?? '';
+      const publisher = params.get('publisher') ?? '';
+
       if (q && q !== this.searchInput) {
         this.searchInput = q;
         this.searchSubject.next(q);
       }
       if (genre && !this.selectedGenres().includes(genre)) {
         this.selectedGenres.set([genre]);
+      }
+      if (author && !this.selectedAuthors().includes(author)) {
+        this.selectedAuthors.set([author]);
+      }
+      if (publisher && !this.selectedPublishers().includes(publisher)) {
+        this.selectedPublishers.set([publisher]);
       }
     }, { allowSignalWrites: true });
 
@@ -159,6 +196,18 @@ export class CatalogueComponent implements OnDestroy {
 
   isGenreSelected(genre: string): boolean { return this.selectedGenres().includes(genre); }
 
+  toggleAuthor(author: string): void {
+    const cur = this.selectedAuthors();
+    this.selectedAuthors.set(cur.includes(author) ? cur.filter(a => a !== author) : [...cur, author]);
+  }
+  isAuthorSelected(author: string): boolean { return this.selectedAuthors().includes(author); }
+
+  togglePublisher(publisher: string): void {
+    const cur = this.selectedPublishers();
+    this.selectedPublishers.set(cur.includes(publisher) ? cur.filter(p => p !== publisher) : [...cur, publisher]);
+  }
+  isPublisherSelected(publisher: string): boolean { return this.selectedPublishers().includes(publisher); }
+
   onMinPriceChange(value: number): void {
     this.minPrice.set(value);
     if (value > this.maxPrice()) this.maxPrice.set(value);
@@ -174,11 +223,15 @@ export class CatalogueComponent implements OnDestroy {
   clearAllFilters(): void {
     const range = this.priceRange();
     this.selectedGenres.set([]);
+    this.selectedAuthors.set([]);
+    this.selectedPublishers.set([]);
     this.minPrice.set(range.min);
     this.maxPrice.set(range.max);
     this.minRating.set(0);
     this.inStockOnly.set(false);
     this.searchInput = '';
+    this.authorSearchQuery.set('');
+    this.publisherSearchQuery.set('');
     this.searchSubject.next('');
   }
 

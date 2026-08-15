@@ -6,7 +6,7 @@
   <!-- Clickable cover → book detail -->
   <a
     class="book-card__cover-link"
-    [routerLink]="['/catalogue', book().id]"
+    [routerLink]="['/product', book().id]"
     [attr.aria-label]="'View details for ' + book().title"
     tabindex="0"
   >
@@ -69,7 +69,7 @@
 
     <!-- Title + author -->
     <a class="book-card__title-link"
-       [routerLink]="['/catalogue', book().id]"
+       [routerLink]="['/product', book().id]"
        [attr.aria-label]="book().title">
       <h3 class="book-card__title">{{ book().title }}</h3>
     </a>

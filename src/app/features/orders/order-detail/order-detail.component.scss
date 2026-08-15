@@ -43,11 +43,18 @@
 .order-detail-layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-6);
-  padding: var(--space-8) 0 var(--space-12);
+  gap: var(--space-4);
+  padding: var(--space-6) 0 var(--space-10);
   align-items: start;
 
-  @media (min-width: 768px) { grid-template-columns: 1fr 280px; }
+  @media (min-width: 768px)  { gap: var(--space-6); }
+  // Sidebar only appears once there's room — 900px gives the main column breathing space
+  @media (min-width: 900px)  { grid-template-columns: 1fr 260px; }
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 280px;
+    padding: var(--space-8) 0 var(--space-12);
+    gap: var(--space-6);
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -57,8 +64,11 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
+  padding: var(--space-4);
   margin-bottom: var(--space-4);
+
+  @media (min-width: 480px) { padding: var(--space-5); }
+  @media (min-width: 768px) { padding: var(--space-6); }
 
   &:last-child { margin-bottom: 0; }
 
@@ -173,17 +183,74 @@
 }
 
 // ══════════════════════════════════════════════════════════
-// CANCEL BUTTON
+// CANCEL AREA
 // ══════════════════════════════════════════════════════════
+
+// Wrapper that stacks the button above the deadline hint
+.order-cancel-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
 .order-detail-cancel {
   border: 1.5px solid var(--color-danger);
   color: var(--color-danger);
   background: none;
   width: 100%;
   justify-content: center;
-  margin-top: var(--space-2);
   transition: background-color var(--transition-fast);
   &:hover { background: rgba(220, 38, 38, 0.06); }
+}
+
+// "Free cancellation until …" line beneath the button
+.order-cancel-deadline {
+  font-size: 12px;
+  color: var(--color-muted);
+  text-align: center;
+  margin: 0;
+  strong { color: var(--color-text); }
+}
+
+// Shown when the 48-hour window has passed but order is still Processing
+.order-cancel-expired {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-muted);
+  line-height: 1.5;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-muted);
+  }
+}
+
+// Modal note and deadline lines
+.cancel-modal__note {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin: var(--space-2) 0 0;
+}
+
+.cancel-modal__deadline {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-muted);
+  strong { color: var(--color-text); }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -210,11 +277,22 @@
   margin: 0 0 var(--space-2);
 }
 
+.order-cod-note {
+  font-size: 13px;
+  color: var(--color-muted);
+  margin: var(--space-2) 0 0;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  strong { color: var(--color-text); }
+}
+
 .order-points-earned {
   font-size: 13px;
   font-weight: 700;
   color: #16A34A;
-  margin: 0;
+  margin: var(--space-2) 0 0;
 }
 
 // ── Small button modifier ───────────────────────────────
