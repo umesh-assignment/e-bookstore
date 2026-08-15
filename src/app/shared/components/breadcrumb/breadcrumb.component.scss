@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.breadcrumb {
+  margin-bottom: var(--space-5);
+
+  &__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  &__link {
+    font-size: 13px;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    min-height: unset;
+
+    &:hover {
+      color: var(--color-accent);
+      text-decoration: underline;
+    }
+  }
+
+  &__sep {
+    font-size: 13px;
+    color: var(--color-border);
+    user-select: none;
+  }
+
+  &__current {
+    font-size: 13px;
+    color: var(--color-text);
+    font-weight: 600;
+  }
+}

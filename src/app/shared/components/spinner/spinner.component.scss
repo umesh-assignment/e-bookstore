@@ -1,0 +1,68 @@
+// Keyframe
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ---- Inline ring ----
+.spinner-ring {
+  display: inline-block;
+  position: relative;
+  width: 32px;
+  height: 32px;
+
+  &--sm { width: 20px; height: 20px; }
+  &--lg { width: 48px; height: 48px; }
+
+  // Target both direct children and the nested span children
+  > span > span,
+  > div {
+    position: absolute;
+    inset: 0;
+    border: 3px solid transparent;
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+
+    &:nth-child(2) {
+      border-top-color: transparent;
+      border-right-color: var(--color-primary);
+      animation-delay: -0.25s;
+      opacity: 0.5;
+    }
+
+    &:nth-child(3) { display: none; }
+    &:nth-child(4) { display: none; }
+  }
+}
+
+// ---- Overlay mode ----
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  animation: fadeInBackdrop var(--transition-base) ease;
+
+  .spinner-ring {
+    width: 48px;
+    height: 48px;
+
+    > span > span,
+    > div {
+      border-width: 4px;
+    }
+  }
+
+  &__label {
+    font-size: 14px;
+    color: var(--color-muted);
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+}

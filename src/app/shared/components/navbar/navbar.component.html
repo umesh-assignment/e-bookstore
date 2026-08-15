@@ -1,0 +1,96 @@
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container navbar__inner">
+
+    <!-- Brand / Logo -->
+    <a class="navbar__brand" routerLink="/" aria-label="e-Bookstore home">
+      <svg class="navbar__logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect width="28" height="28" rx="6" fill="currentColor"/>
+        <path d="M7 8h8a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7V8z" fill="white" opacity="0.9"/>
+        <path d="M15 8h2a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-2V8z" fill="white" opacity="0.5"/>
+        <path d="M8 11h6M8 13.5h6M8 16h4" stroke="#1A3A5C" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <span class="navbar__brand-text">e-Bookstore</span>
+    </a>
+
+    <!-- Desktop Nav Links -->
+    <ul class="navbar__links" role="list">
+      <li>
+        <a class="navbar__link" routerLink="/" routerLinkActive="navbar__link--active"
+           [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      </li>
+      <li>
+        <a class="navbar__link" routerLink="/catalogue" routerLinkActive="navbar__link--active">Browse</a>
+      </li>
+    </ul>
+
+    <!-- Right-side actions -->
+    <div class="navbar__actions">
+      <!-- Basket icon -->
+      <a class="btn-icon navbar__action-btn" routerLink="/basket" aria-label="Basket">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </a>
+
+      <!-- Auth links (static for Phase 1) -->
+      <a class="btn btn--primary btn--sm" routerLink="/login">Login</a>
+    </div>
+
+    <!-- Hamburger (mobile) -->
+    <button
+      class="btn-icon navbar__hamburger"
+      [attr.aria-expanded]="mobileMenuOpen"
+      aria-controls="mobile-menu"
+      aria-label="Toggle navigation menu"
+      (click)="toggleMobileMenu()"
+    >
+      @if (!mobileMenuOpen) {
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      } @else {
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      }
+    </button>
+
+  </div>
+
+  <!-- Mobile dropdown menu -->
+  <div
+    class="navbar__mobile-menu"
+    [class.navbar__mobile-menu--open]="mobileMenuOpen"
+    id="mobile-menu"
+    role="menu"
+  >
+    <ul role="list">
+      <li role="none">
+        <a class="navbar__mobile-link" role="menuitem" routerLink="/"
+           routerLinkActive="navbar__link--active" [routerLinkActiveOptions]="{ exact: true }"
+           (click)="closeMobileMenu()">Home</a>
+      </li>
+      <li role="none">
+        <a class="navbar__mobile-link" role="menuitem" routerLink="/catalogue"
+           routerLinkActive="navbar__link--active"
+           (click)="closeMobileMenu()">Browse</a>
+      </li>
+      <li role="none">
+        <a class="navbar__mobile-link" role="menuitem" routerLink="/basket"
+           (click)="closeMobileMenu()">Basket</a>
+      </li>
+      <li role="none">
+        <a class="navbar__mobile-link" role="menuitem" routerLink="/login"
+           (click)="closeMobileMenu()">Login / Register</a>
+      </li>
+    </ul>
+  </div>
+</nav>

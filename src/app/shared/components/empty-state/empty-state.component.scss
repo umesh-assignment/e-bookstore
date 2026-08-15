@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-12) var(--space-4);
+  gap: var(--space-4);
+
+  &__icon {
+    color: var(--color-border);
+    margin-bottom: var(--space-2);
+
+    svg { display: block; }
+  }
+
+  &__title {
+    font-size: 18px;
+    color: var(--color-primary);
+    margin-bottom: 0;
+  }
+
+  &__message {
+    color: var(--color-muted);
+    font-size: 15px;
+    max-width: 360px;
+    margin-bottom: 0;
+  }
+}

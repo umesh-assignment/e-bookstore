@@ -1,0 +1,52 @@
+:host {
+  display: inline-flex;
+}
+
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+
+  // Sizes
+  .star { width: 16px; height: 16px; }
+  &--sm .star { width: 13px; height: 13px; }
+  &--lg .star { width: 20px; height: 20px; }
+
+  &__count {
+    font-size: 12px;
+    color: var(--color-muted);
+    margin-left: var(--space-1);
+    white-space: nowrap;
+  }
+}
+
+// Star colours
+.star {
+  color: var(--color-border); // empty default
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+
+  &--full {
+    color: #F59E0B; // Amber-400 — universally recognisable star colour
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  &--half {
+    color: #F59E0B;
+    stroke: currentColor;
+  }
+
+  &--empty {
+    color: #D1D5DB; // Gray-300
+    fill: none;
+    stroke: currentColor;
+  }
+
+  &__path--filled {
+    fill: currentColor;
+  }
+}

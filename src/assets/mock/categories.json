@@ -1,0 +1,8 @@
+[
+  { "id": "fiction",    "name": "Fiction",            "icon": "📖" },
+  { "id": "sci-fi",     "name": "Science Fiction",    "icon": "🚀" },
+  { "id": "non-fiction","name": "Non-Fiction",         "icon": "📚" },
+  { "id": "mystery",    "name": "Mystery & Thriller",  "icon": "🔍" },
+  { "id": "fantasy",    "name": "Fantasy",             "icon": "🧙" },
+  { "id": "biography",  "name": "Biography",           "icon": "🏆" }
+]

@@ -1,0 +1,434 @@
+[
+  {
+    "id": "rev-001-a", "bookId": "book-001", "reviewerName": "Sarah K.",
+    "rating": 5, "title": "A haunting masterpiece",
+    "body": "Fitzgerald's prose is so luminous it hurts to read. Every sentence earns its place. Gatsby remains one of literature's greatest tragic figures and this novel one of its most devastating.",
+    "date": "2024-03-15"
+  },
+  {
+    "id": "rev-001-b", "bookId": "book-001", "reviewerName": "Marcus T.",
+    "rating": 4, "title": "Beautifully written, slightly overrated",
+    "body": "There's no denying the gorgeous prose, but I found Daisy frustrating as a character. Still a very important book about the illusions we build around ourselves.",
+    "date": "2024-01-22"
+  },
+  {
+    "id": "rev-001-c", "bookId": "book-001", "reviewerName": "Priya N.",
+    "rating": 4, "title": "The American Dream dissected",
+    "body": "Short, sharp, and profound. Fitzgerald packs more insight into 180 pages than most authors manage in 600. A quintessential American novel that ages like wine.",
+    "date": "2023-11-09"
+  },
+  {
+    "id": "rev-002-a", "bookId": "book-002", "reviewerName": "James P.",
+    "rating": 5, "title": "Should be required reading for everyone",
+    "body": "To Kill a Mockingbird is the rare novel that works on every level: as a courtroom drama, a coming-of-age story, and a searing critique of racial injustice. Atticus Finch is the moral hero of American literature.",
+    "date": "2024-04-02"
+  },
+  {
+    "id": "rev-002-b", "bookId": "book-002", "reviewerName": "Lena W.",
+    "rating": 5, "title": "Scout Finch changed my life",
+    "body": "I first read this at twelve and it made me want to be a lawyer. The voice Harper Lee gives Scout is so perfectly observed—curious, funny, and devastatingly honest.",
+    "date": "2024-02-14"
+  },
+  {
+    "id": "rev-002-c", "bookId": "book-002", "reviewerName": "Ravi M.",
+    "rating": 4, "title": "Timeless and painful",
+    "body": "The scenes in the courtroom and the reveal of Tom Robinson's fate are among the most emotionally devastating passages in literature. Read this if you haven't.",
+    "date": "2023-09-30"
+  },
+  {
+    "id": "rev-003-a", "bookId": "book-003", "reviewerName": "Oliver H.",
+    "rating": 5, "title": "More relevant now than ever",
+    "body": "I read this expecting a dated political allegory and found a razor-sharp, emotionally resonant novel that describes the present moment with frightening accuracy. Big Brother IS watching.",
+    "date": "2024-05-10"
+  },
+  {
+    "id": "rev-003-b", "bookId": "book-003", "reviewerName": "Camille D.",
+    "rating": 5, "title": "Essential reading",
+    "body": "Orwell writes with cold precision and white-hot urgency. The appendix on Newspeak alone is one of the great essays on the relationship between language and power.",
+    "date": "2024-01-08"
+  },
+  {
+    "id": "rev-003-c", "bookId": "book-003", "reviewerName": "Nathan B.",
+    "rating": 4, "title": "Bleak, brilliant, unforgettable",
+    "body": "The last fifty pages are among the most harrowing things I've ever read. Orwell never lets you look away from the logical conclusion of totalitarianism.",
+    "date": "2023-10-18"
+  },
+  {
+    "id": "rev-004-a", "bookId": "book-004", "reviewerName": "Isla F.",
+    "rating": 5, "title": "Prophetic and deeply unsettling",
+    "body": "Huxley wrote this almost a hundred years ago and it reads like tomorrow's headlines. The idea that conformity and comfort might be more dangerous than authoritarian oppression is truly chilling.",
+    "date": "2024-03-28"
+  },
+  {
+    "id": "rev-004-b", "bookId": "book-004", "reviewerName": "Tom G.",
+    "rating": 4, "title": "A companion to 1984",
+    "body": "Where Orwell shows us tyranny through fear, Huxley shows us tyranny through pleasure. Read both and you'll never look at your smartphone the same way.",
+    "date": "2024-02-02"
+  },
+  {
+    "id": "rev-004-c", "bookId": "book-004", "reviewerName": "Ayesha P.",
+    "rating": 3, "title": "Thought-provoking but slow",
+    "body": "The ideas are magnificent but the pacing drags in places. John the Savage is a compelling character, but I found the first third difficult to get through.",
+    "date": "2023-12-05"
+  },
+  {
+    "id": "rev-005-a", "bookId": "book-005", "reviewerName": "Connor M.",
+    "rating": 5, "title": "The greatest SF novel ever written",
+    "body": "Nothing else comes close. The world-building, the themes, the politics, the ecology—Dune operates on a scale that still feels impossible. Herbert created something that will be read for centuries.",
+    "date": "2024-04-19"
+  },
+  {
+    "id": "rev-005-b", "bookId": "book-005", "reviewerName": "Zara A.",
+    "rating": 5, "title": "Changed how I think about everything",
+    "body": "Paul's arc from naive heir to messianic figure is one of literature's greatest character journeys. This book rewards re-reading endlessly—every pass reveals new layers.",
+    "date": "2024-01-30"
+  },
+  {
+    "id": "rev-005-c", "bookId": "book-005", "reviewerName": "Felix J.",
+    "rating": 4, "title": "Dense but worth every page",
+    "body": "Dune takes commitment. The first hundred pages are a steep learning curve. But by the time you're on Arrakis with Paul, you're completely absorbed. Stick with it.",
+    "date": "2023-11-14"
+  },
+  {
+    "id": "rev-006-a", "bookId": "book-006", "reviewerName": "Ellie R.",
+    "rating": 5, "title": "Funniest book I've ever read",
+    "body": "I was laughing out loud on public transport from page five onwards. Adams writes with a comic precision that is completely unique. The answer to everything is exactly what it should be.",
+    "date": "2024-03-07"
+  },
+  {
+    "id": "rev-006-b", "bookId": "book-006", "reviewerName": "Declan O.",
+    "rating": 5, "title": "Read it. Immediately.",
+    "body": "Absolutely hilarious and secretly profound. The bit about the whale and the bowl of petunias is a perfect tiny philosophical novel in itself. A masterpiece of comic writing.",
+    "date": "2024-01-16"
+  },
+  {
+    "id": "rev-006-c", "bookId": "book-006", "reviewerName": "Nadia S.",
+    "rating": 4, "title": "Brilliantly absurd",
+    "body": "Some of the universe-building feels a bit meandering, but the core premise—that Earth is just an elaborate computer program calculating the question to 42—is inspired. A cult classic for good reason.",
+    "date": "2023-10-22"
+  },
+  {
+    "id": "rev-007-a", "bookId": "book-007", "reviewerName": "Kai T.",
+    "rating": 5, "title": "The book that invented cyberpunk",
+    "body": "Gibson writes with the compressed intensity of poetry. Every paragraph is packed with ideas that entire novels have been written about. Neuromancer is genuinely visionary.",
+    "date": "2024-04-11"
+  },
+  {
+    "id": "rev-007-b", "bookId": "book-007", "reviewerName": "Rita L.",
+    "rating": 4, "title": "Dense but electric",
+    "body": "The prose takes some getting used to—Gibson throws you in at the deep end. But once you surrender to the rhythm, the neon-soaked, rain-slicked world of cyberspace is utterly compelling.",
+    "date": "2024-02-20"
+  },
+  {
+    "id": "rev-007-c", "bookId": "book-007", "reviewerName": "Sam Q.",
+    "rating": 3, "title": "Important but challenging",
+    "body": "I can see the historical significance but the plot is genuinely difficult to follow on first read. More a sensory experience than a conventional narrative. Worth it for the writing alone.",
+    "date": "2023-09-05"
+  },
+  {
+    "id": "rev-008-a", "bookId": "book-008", "reviewerName": "Emma B.",
+    "rating": 5, "title": "I cried and I never cry at books",
+    "body": "Andy Weir pulls off the near-impossible: a technically rigorous science fiction novel that is also one of the most emotionally resonant stories I've ever read. Rocky alone justifies the price.",
+    "date": "2024-05-02"
+  },
+  {
+    "id": "rev-008-b", "bookId": "book-008", "reviewerName": "George N.",
+    "rating": 5, "title": "Unputdownable",
+    "body": "I read this in two sittings and spent most of the second sitting unable to put it down even though I needed to sleep. The revelation at the midpoint is one of the great moments in modern SF.",
+    "date": "2024-03-18"
+  },
+  {
+    "id": "rev-008-c", "bookId": "book-008", "reviewerName": "Layla C.",
+    "rating": 5, "title": "Pure joy",
+    "body": "Everything about this book works. The voice, the science, the character development, the pacing. Weir gets better with every novel and this is his masterpiece.",
+    "date": "2024-01-25"
+  },
+  {
+    "id": "rev-009-a", "bookId": "book-009", "reviewerName": "Arjun V.",
+    "rating": 5, "title": "Changed my perspective on everything",
+    "body": "Harari synthesises thousands of years of history into a coherent, provocative narrative that questions every assumption about what makes humans special. I've re-read it twice and keep finding new things.",
+    "date": "2024-04-25"
+  },
+  {
+    "id": "rev-009-b", "bookId": "book-009", "reviewerName": "Hannah W.",
+    "rating": 4, "title": "Hugely accessible and thought-provoking",
+    "body": "My favourite thing about Sapiens is that it forces you to question things you've always taken for granted. Harari is brilliant at making the familiar feel strange and the strange feel familiar.",
+    "date": "2024-02-08"
+  },
+  {
+    "id": "rev-009-c", "bookId": "book-009", "reviewerName": "Leon F.",
+    "rating": 4, "title": "The sweeping narrative of us",
+    "body": "Controversial in places—Harari makes some big claims—but this is the most engaging work of popular history I've read. It should be on every school curriculum.",
+    "date": "2023-12-14"
+  },
+  {
+    "id": "rev-010-a", "bookId": "book-010", "reviewerName": "Sophie A.",
+    "rating": 5, "title": "Revelation after revelation",
+    "body": "Every chapter contains at least one idea that makes you think differently about yourself. Kahneman writes with great clarity about incredibly complex cognitive processes. Indispensable.",
+    "date": "2024-04-08"
+  },
+  {
+    "id": "rev-010-b", "bookId": "book-010", "reviewerName": "Michael T.",
+    "rating": 4, "title": "Heavy but rewarding",
+    "body": "I'll admit it's not a light read and the later chapters on economics get dense. But the sections on cognitive biases alone are worth the whole book. I now catch myself making System 1 errors every day.",
+    "date": "2024-01-04"
+  },
+  {
+    "id": "rev-010-c", "bookId": "book-010", "reviewerName": "Fatima K.",
+    "rating": 4, "title": "Genuinely life-changing",
+    "body": "I wish this had been in school. Understanding that we are not as rational as we think we are is the first step to making better decisions. Essential reading.",
+    "date": "2023-11-22"
+  },
+  {
+    "id": "rev-011-a", "bookId": "book-011", "reviewerName": "Grace O.",
+    "rating": 5, "title": "Extraordinary. Literally.",
+    "body": "Westover's story is so remarkable it would be unbelievable as fiction. But the real power of this memoir is not the dramatic events—it's the precision and honesty with which she examines her own mind and the process of learning to trust it.",
+    "date": "2024-03-30"
+  },
+  {
+    "id": "rev-011-b", "bookId": "book-011", "reviewerName": "Josh R.",
+    "rating": 5, "title": "The best memoir I've ever read",
+    "body": "A book about education that is also a profound exploration of family, loyalty, memory, and identity. Westover's writing is so precise and controlled it's easy to miss how heartbreaking it is.",
+    "date": "2024-01-18"
+  },
+  {
+    "id": "rev-011-c", "bookId": "book-011", "reviewerName": "Diane S.",
+    "rating": 5, "title": "Couldn't put it down",
+    "body": "I read this in one day. The tension between Westover's loyalty to her family and her commitment to truth is unbearable in the best way. One of the most important books of recent years.",
+    "date": "2023-10-03"
+  },
+  {
+    "id": "rev-012-a", "bookId": "book-012", "reviewerName": "Alex M.",
+    "rating": 5, "title": "Actually works",
+    "body": "I've read a lot of habit books and this is the only one that actually changed my behaviour. Clear's framework of identity-based habits rather than outcome-based habits is genuinely transformative.",
+    "date": "2024-04-14"
+  },
+  {
+    "id": "rev-012-b", "bookId": "book-012", "reviewerName": "Chloe P.",
+    "rating": 5, "title": "Practical and profound",
+    "body": "The 1% better every day concept sounds simple but the mechanics Clear lays out for making it real are surprisingly deep. This book has genuinely changed how I approach everything from exercise to work.",
+    "date": "2024-02-26"
+  },
+  {
+    "id": "rev-012-c", "bookId": "book-012", "reviewerName": "David L.",
+    "rating": 4, "title": "The best self-help book I've read",
+    "body": "Some sections feel repetitive but the core ideas are solid and well-evidenced. The four laws of behaviour change are a genuinely useful framework. Recommended to everyone I know.",
+    "date": "2023-12-01"
+  },
+  {
+    "id": "rev-013-a", "bookId": "book-013", "reviewerName": "Mia J.",
+    "rating": 5, "title": "Ingeniously plotted",
+    "body": "I was completely certain I knew who did it by the halfway point. I was completely wrong. Flynn is a master of the unreliable narrator and the controlled reveal. Devoured in 24 hours.",
+    "date": "2024-04-22"
+  },
+  {
+    "id": "rev-013-b", "bookId": "book-013", "reviewerName": "Steve B.",
+    "rating": 4, "title": "Dark and compulsive",
+    "body": "The characters are genuinely unpleasant but you cannot stop reading. Amy's voice in particular is a superb creation. Flynn holds her cards perfectly.",
+    "date": "2024-02-10"
+  },
+  {
+    "id": "rev-013-c", "bookId": "book-013", "reviewerName": "Tara H.",
+    "rating": 4, "title": "Perfect holiday read",
+    "body": "If you want something that will keep you up past midnight furiously turning pages, Gone Girl is your book. The ending is divisive but I loved it.",
+    "date": "2023-11-18"
+  },
+  {
+    "id": "rev-014-a", "bookId": "book-014", "reviewerName": "Anna K.",
+    "rating": 5, "title": "Lisbeth Salander is unforgettable",
+    "body": "There are thrillers and there is The Girl with the Dragon Tattoo. Lisbeth is one of the most original characters in crime fiction and Larsson gives her a story worthy of her. Essential.",
+    "date": "2024-03-12"
+  },
+  {
+    "id": "rev-014-b", "bookId": "book-014", "reviewerName": "Patrick S.",
+    "rating": 5, "title": "Nordic noir at its finest",
+    "body": "The slow-build opening pays off spectacularly. The investigation into the Vanger family is one of the most satisfying mystery plots I've encountered. Bleak, beautiful, brilliant.",
+    "date": "2024-01-28"
+  },
+  {
+    "id": "rev-014-c", "bookId": "book-014", "reviewerName": "Claire D.",
+    "rating": 4, "title": "Gripping despite its length",
+    "body": "672 pages sounds daunting but Larsson keeps the tension high throughout. The financial subplot is less compelling than the central mystery but the payoffs are worth it.",
+    "date": "2023-10-10"
+  },
+  {
+    "id": "rev-015-a", "bookId": "book-015", "reviewerName": "Ben T.",
+    "rating": 5, "title": "The twist destroyed me",
+    "body": "I cannot say anything about the plot without spoiling it. Read it without looking anything up. The ending is perfectly executed and I had absolutely no idea it was coming.",
+    "date": "2024-05-08"
+  },
+  {
+    "id": "rev-015-b", "bookId": "book-015", "reviewerName": "Yasmin F.",
+    "rating": 4, "title": "Gripping psychological thriller",
+    "body": "Michaelides builds tension masterfully and Alicia's painting is a brilliant narrative device. The therapy scenes are particularly effective at making you question whose version of reality to trust.",
+    "date": "2024-02-22"
+  },
+  {
+    "id": "rev-015-c", "bookId": "book-015", "reviewerName": "Chris N.",
+    "rating": 4, "title": "Kept me guessing until the end",
+    "body": "A well-constructed thriller with a genuinely surprising denouement. Some of the psychiatry stretches credibility but as entertainment it is absolutely first-rate.",
+    "date": "2023-12-20"
+  },
+  {
+    "id": "rev-016-a", "bookId": "book-016", "reviewerName": "Karen L.",
+    "rating": 4, "title": "Sharp comedy with real depth",
+    "body": "Moriarty's comedy is razor-sharp but she never lets you forget that the events underlying this story are genuinely dark. The school gate society is observed with devastating precision.",
+    "date": "2024-04-06"
+  },
+  {
+    "id": "rev-016-b", "bookId": "book-016", "reviewerName": "Rob W.",
+    "rating": 4, "title": "Addictive",
+    "body": "My partner recommended this and I rolled my eyes. Then I read it in two sittings. The structure—using depositions and interviews to reveal the story backwards—is brilliantly executed.",
+    "date": "2024-01-10"
+  },
+  {
+    "id": "rev-016-c", "bookId": "book-016", "reviewerName": "Susan C.",
+    "rating": 3, "title": "Entertaining but slight",
+    "body": "Very enjoyable and clever but I found the resolution a little too neat. The comedy is excellent and the characters memorable. A very good beach read.",
+    "date": "2023-09-14"
+  },
+  {
+    "id": "rev-017-a", "bookId": "book-017", "reviewerName": "Ian B.",
+    "rating": 5, "title": "The finest fantasy debut in decades",
+    "body": "Rothfuss writes prose so beautiful it borders on poetry. Kvothe is an extraordinarily compelling character and the frame narrative adds a layer of melancholy to everything. Please finish the third book.",
+    "date": "2024-04-28"
+  },
+  {
+    "id": "rev-017-b", "bookId": "book-017", "reviewerName": "Lucy A.",
+    "rating": 5, "title": "The music scenes alone are worth it",
+    "body": "I am not usually a fantasy reader but this is something else. The way Rothfuss writes about music—making you feel the beauty of something being performed—is extraordinary.",
+    "date": "2024-02-16"
+  },
+  {
+    "id": "rev-017-c", "bookId": "book-017", "reviewerName": "Mark S.",
+    "rating": 4, "title": "Brilliant but beware the wait",
+    "body": "Just know you are committing to an unfinished series that may never be finished. If you can accept that, the first two books are among the best the genre has to offer.",
+    "date": "2023-12-08"
+  },
+  {
+    "id": "rev-018-a", "bookId": "book-018", "reviewerName": "Jake F.",
+    "rating": 5, "title": "Epic in every sense of the word",
+    "body": "1007 pages and it doesn't waste a single one. Sanderson builds a world of extraordinary complexity and populates it with characters you genuinely care about. Kaladin's journey is heartbreaking and triumphant.",
+    "date": "2024-05-01"
+  },
+  {
+    "id": "rev-018-b", "bookId": "book-018", "reviewerName": "Petra B.",
+    "rating": 5, "title": "Best fantasy series since LOTR",
+    "body": "The Stormlight Archive is a genuine achievement. The magic system (stormlight and the radiants) is the most innovative in the genre. Sanderson's worldbuilding is without equal.",
+    "date": "2024-03-09"
+  },
+  {
+    "id": "rev-018-c", "bookId": "book-018", "reviewerName": "Nick H.",
+    "rating": 4, "title": "Demanding but deeply rewarding",
+    "body": "This is not a quick read. The interludes can feel disconnecting. But the main plot threads are so compelling and the action so brilliantly staged that it earns its length.",
+    "date": "2023-11-28"
+  },
+  {
+    "id": "rev-019-a", "bookId": "book-019", "reviewerName": "Holly P.",
+    "rating": 5, "title": "Pure delight",
+    "body": "Two of my favourite authors wrote a book together and it is exactly as good as you would hope. Pratchett's humanism and Gaiman's mythology combine perfectly. Aziraphale and Crowley are iconic.",
+    "date": "2024-04-16"
+  },
+  {
+    "id": "rev-019-b", "bookId": "book-019", "reviewerName": "Will M.",
+    "rating": 5, "title": "Funniest fantasy novel I've read",
+    "body": "The Horsepersons of the Apocalypse. Death's love of curry. The satanic nuns. Every idea in this book is brilliant and they keep coming. An absolute classic.",
+    "date": "2024-01-14"
+  },
+  {
+    "id": "rev-019-c", "bookId": "book-019", "reviewerName": "Rosa T.",
+    "rating": 4, "title": "Laugh-out-loud funny",
+    "body": "The central friendship between Aziraphale and Crowley is so charming and warm it makes the apocalyptic stakes feel somehow cosy. Effortlessly likeable and endlessly quotable.",
+    "date": "2023-10-26"
+  },
+  {
+    "id": "rev-020-a", "bookId": "book-020", "reviewerName": "Dylan C.",
+    "rating": 5, "title": "The best heist novel ever written",
+    "body": "Lynch builds Camorr with the care and detail of a Venetian goldsmith. The Gentlemen Bastards are one of the great ensemble casts in fantasy. The pacing is perfect and the twists devastating.",
+    "date": "2024-04-30"
+  },
+  {
+    "id": "rev-020-b", "bookId": "book-020", "reviewerName": "Ella R.",
+    "rating": 5, "title": "Witty, dark and utterly brilliant",
+    "body": "A fantasy novel that reads like a literary thriller. Lynch's world is unique and his characters—especially Locke—are wonderfully complex. The flashback structure works brilliantly.",
+    "date": "2024-02-04"
+  },
+  {
+    "id": "rev-020-c", "bookId": "book-020", "reviewerName": "Jamie W.",
+    "rating": 4, "title": "A hidden gem of the genre",
+    "body": "Far less well-known than it deserves to be. The prose is excellent, the heist elements genuinely clever, and the friendship between Locke and Jean is moving. Highly recommended.",
+    "date": "2023-12-16"
+  },
+  {
+    "id": "rev-021-a", "bookId": "book-021", "reviewerName": "Carl E.",
+    "rating": 5, "title": "Definitive portrait of a visionary",
+    "body": "Isaacson had extraordinary access and uses it to paint a complete picture of one of history's most extraordinary and contradictory figures. Jobs comes across as both brilliant and deeply flawed, which makes for compelling reading.",
+    "date": "2024-04-18"
+  },
+  {
+    "id": "rev-021-b", "bookId": "book-021", "reviewerName": "Natalie S.",
+    "rating": 4, "title": "Inspiring and infuriating in equal measure",
+    "body": "You finish this book understanding why Apple exists and understanding why Steve Jobs was so difficult to work for. The creativity insights are worth the price alone.",
+    "date": "2024-02-12"
+  },
+  {
+    "id": "rev-021-c", "bookId": "book-021", "reviewerName": "Greg T.",
+    "rating": 4, "title": "Essential for anyone in tech",
+    "body": "Whether you admire or dislike Jobs, this biography is essential reading for understanding how transformative technology gets built. Isaacson is an excellent biographer.",
+    "date": "2023-11-06"
+  },
+  {
+    "id": "rev-022-a", "bookId": "book-022", "reviewerName": "Denise M.",
+    "rating": 5, "title": "Graceful, honest and inspiring",
+    "body": "Obama's voice on the page is warm, witty, and utterly real. She doesn't pretend the White House years were easy or perfect, which makes her account all the more powerful.",
+    "date": "2024-04-20"
+  },
+  {
+    "id": "rev-022-b", "bookId": "book-022", "reviewerName": "Vincent L.",
+    "rating": 5, "title": "The best memoir of the decade",
+    "body": "Michelle Obama writes with a candour and humanity that is rare in political memoirs. The sections about her childhood on the South Side are some of the finest writing in recent American letters.",
+    "date": "2024-02-28"
+  },
+  {
+    "id": "rev-022-c", "bookId": "book-022", "reviewerName": "Patricia J.",
+    "rating": 5, "title": "Moved me to tears",
+    "body": "I laughed, I cried, and I finished it feeling genuinely hopeful. Obama is a remarkable person and a remarkable writer. Required reading for anyone who cares about public life.",
+    "date": "2023-12-30"
+  },
+  {
+    "id": "rev-023-a", "bookId": "book-023", "reviewerName": "Barbara A.",
+    "rating": 5, "title": "Every human being should read this",
+    "body": "The Diary remains one of the most devastating and hopeful documents in human history. Anne's voice is so vivid and alive that the knowledge of what happened to her is unbearable.",
+    "date": "2024-04-24"
+  },
+  {
+    "id": "rev-023-b", "bookId": "book-023", "reviewerName": "Marcus O.",
+    "rating": 5, "title": "A testament to the human spirit",
+    "body": "What strikes me every time I read this is how ordinary and how extraordinary Anne was simultaneously. She was a teenager who wanted to be a writer, and she was.",
+    "date": "2024-01-06"
+  },
+  {
+    "id": "rev-023-c", "bookId": "book-023", "reviewerName": "Linda H.",
+    "rating": 5, "title": "Impossible to read with dry eyes",
+    "body": "I taught this book for fifteen years and cried every time. The passage where Anne writes about her ambitions for the future is one of the great pieces of writing in the language.",
+    "date": "2023-10-31"
+  },
+  {
+    "id": "rev-024-a", "bookId": "book-024", "reviewerName": "Rachel B.",
+    "rating": 5, "title": "Devastating and necessary",
+    "body": "Chanel Miller reclaims her identity and her story in a book that is as beautifully written as it is important. Her precision in describing trauma and recovery is extraordinary.",
+    "date": "2024-05-05"
+  },
+  {
+    "id": "rev-024-b", "bookId": "book-024", "reviewerName": "Laura T.",
+    "rating": 5, "title": "One of the most important books of our time",
+    "body": "The impact statement that went viral was already extraordinary. The memoir reveals a writer of serious gifts. Courageous, lyrical, and essential.",
+    "date": "2024-03-03"
+  },
+  {
+    "id": "rev-024-c", "bookId": "book-024", "reviewerName": "Susan E.",
+    "rating": 5, "title": "Read this",
+    "body": "I cannot recommend this book highly enough. Miller writes about the worst experience of her life with beauty, precision, and a refusal to diminish what happened. Absolutely essential.",
+    "date": "2023-12-24"
+  }
+]

@@ -1,0 +1,48 @@
+<footer class="footer" role="contentinfo">
+  <div class="container footer__inner">
+
+    <!-- Brand -->
+    <div class="footer__brand">
+      <span class="footer__brand-name">e-Bookstore</span>
+      <p class="footer__tagline">Your favourite books, delivered.</p>
+    </div>
+
+    <!-- Navigation columns -->
+    <nav class="footer__nav" aria-label="Footer navigation">
+      <div class="footer__col">
+        <h3 class="footer__col-heading">Shop</h3>
+        <ul role="list">
+          <li><a class="footer__link" routerLink="/">Home</a></li>
+          <li><a class="footer__link" routerLink="/catalogue">Browse Books</a></li>
+          <li><a class="footer__link" routerLink="/basket">Basket</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3 class="footer__col-heading">Account</h3>
+        <ul role="list">
+          <li><a class="footer__link" routerLink="/login">Login</a></li>
+          <li><a class="footer__link" routerLink="/register">Register</a></li>
+          <li><a class="footer__link" routerLink="/orders">My Orders</a></li>
+          <li><a class="footer__link" routerLink="/wishlist">Wishlist</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3 class="footer__col-heading">Help</h3>
+        <ul role="list">
+          <li><a class="footer__link" routerLink="/about">About</a></li>
+          <li><a class="footer__link" routerLink="/contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+  </div>
+
+  <div class="footer__bottom">
+    <div class="container footer__bottom-inner">
+      <p class="footer__copy">&copy; {{ currentYear }} e-Bookstore. All rights reserved.</p>
+      <p class="footer__disclaimer">A frontend portfolio project. No real transactions are processed.</p>
+    </div>
+  </div>
+</footer>
